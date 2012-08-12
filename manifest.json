@@ -1,0 +1,28 @@
+{
+  "name": "__MSG_extName__",
+  "version": "2012.8.11.1",
+  "manifest_version": 2,
+  "description": "__MSG_extDescription__",
+  "icons": {
+    "16": "images/angle.png",
+    "48": "images/angle.png",
+    "128": "images/angle.png"
+  },
+  "page_action": {
+    "default_icon": "images/angle.png",
+    "default_title": "__MSG_availableCharacters__"
+  },
+  "default_locale": "en",
+  "background": {
+    "scripts": [ "js/jquery-1.8.0.min.js", "js/underscore-min.js", "js/backbone-min.js", "app.js", "background.js" ]
+  },
+  "minimum_chrome_version": "20",
+  "options_page": "options.html",
+  "permissions": [
+    "https://*.app.com/*",
+    "notifications",
+    "tabs",
+    "<all_urls>"
+    ],
+  "omnibox": { "keyword" : "adn" }
+}
