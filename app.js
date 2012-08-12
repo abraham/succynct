@@ -144,6 +144,20 @@ function attacheAuthHeader(xhr, settings) {
     xhr.setRequestHeader('Authorization', 'Bearer ' + window.account.get('accessToken'));
   }
 }
+function trackRateLimit(jqXHR, settings) {
+  if (!window.env || window.env !== 'background') {
+    return;
+  }
+  var remaining = jqXHR.getResponseHeader('X-RateLimit-Remaining');
+  if (remaining) {
+    RateLimit.push({
+      // TODO: clean up timestamp hack
+      timestamp: parseInt((new Date()).getTime().toString().substring(0,10)),
+      remaining: parseInt(remaining)
+    })
+  }
+}
 $.ajaxSetup({
-  beforeSend: attacheAuthHeader
+  beforeSend: attacheAuthHeader,
+  complete: trackRateLimit
 });
