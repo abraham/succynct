@@ -4,12 +4,12 @@
   "manifest_version": 2,
   "description": "__MSG_extDescription__",
   "icons": {
-    "16": "images/angle.png",
-    "48": "images/angle.png",
-    "128": "images/angle.png"
+    "16": "img/angle.png",
+    "48": "img/angle.png",
+    "128": "img/angle.png"
   },
   "page_action": {
-    "default_icon": "images/angle.png",
+    "default_icon": "img/angle.png",
     "default_title": "__MSG_availableCharacters__"
   },
   "default_locale": "en",
