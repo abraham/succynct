@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function openAuthUrl() {
-  console.log('openAuthUrl');
   openAndCloseTab(buildAuthUrl());
 }
 
@@ -29,7 +28,6 @@ function init() {
   }
   
   if (localStorage.getItem('accessToken')) {
-    console.log('accessToken');
     $('#account').html('<div><img src="img/loader.gif"/></div>');
     window.accessToken = localStorage.getItem('accessToken');
     window.account = new Account();
@@ -40,8 +38,7 @@ function init() {
 }
 
 function accountFetch(account) {
-  console.log('account')
-  console.log(account)
+  chrome.extension.sendMessage({ method: 'put', action: 'oauth/authenticate'}, function(response) { });
   $('#account').html('<div>@<span><a href="https://alpha.app.net/' + account.get('username') + '">' + account.get('username') + '</a></span> <button class="btn end-auth btn-danger">Sign out</button></div>');
 }
 
