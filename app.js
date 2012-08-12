@@ -32,6 +32,9 @@ window.OmniboxView = Backbone.View.extend({
       return;
     }
     
+    if (text.indexOf('::') === 0) {
+      text = text.substring(2);
+    }
     var post = new Post();
     post.set({ text: text });
     // TODO: catch errors
@@ -39,6 +42,8 @@ window.OmniboxView = Backbone.View.extend({
   },
   onInputChanged: function(text, suggest) {
     var suggestions = [];
+    suggestions.push({ content: '::' + text, description: (256 - text.length) + ' characters remaning' });
+    
     if (text.indexOf(' ') > -1 || text.length === 0) {
       suggest(suggestions);
       return;

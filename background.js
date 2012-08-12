@@ -19,6 +19,6 @@ function onMessage(request, sender, sendResponse) {
 }
 
 chrome.extension.onMessage.addListener(onMessage);
-chrome.omnibox.setDefaultSuggestion({ description: 'Post <match>%s</match> to App.net' });
+chrome.omnibox.setDefaultSuggestion({ description: 'Post to App.net <match>%s</match>' });
 chrome.omnibox.onInputEntered.addListener(window.omniboxview.onInputEntered);
 chrome.omnibox.onInputChanged.addListener(window.omniboxview.onInputChanged);
