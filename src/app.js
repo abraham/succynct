@@ -111,18 +111,23 @@ window.Post = Backbone.Model.extend({
       this.close();
     }
     // TODO: store the post locally
-    // TODO: auto close popup in 5 seconds
+    setTimeout(function(){
+      notification.close();
+    }, 5 * 1000);
     notification.show();
   },
   error: function() {
     var notification = webkitNotifications.createNotification(
       chrome.extension.getURL('/img/angle.png'),
       'Posting to App.net failed',
-      'Please try agian.'
+      'Please try agian. This notification will close in 10 seconds.'
     );
     notification.onclick = function() {
       this.close();
     }
+    setTimeout(function(){
+      notification.close();
+    }, 10 * 1000);
     notification.show();
   }
 });
