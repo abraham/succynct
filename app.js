@@ -173,6 +173,7 @@ function attacheAuthHeader(xhr, settings) {
   }
 }
 function trackRateLimit(jqXHR, settings) {
+  return;
   if (!window.env || window.env !== 'background') {
     return;
   }
