@@ -6,6 +6,7 @@ window.Account = Backbone.Model.extend({
     }
   },
   url: function() {
+    // TODO: The access_token shouldn't be needed anymore
     return 'https://alpha-api.app.net/stream/0/users/me?access_token=' + this.get('accessToken');
   },
   checkAuth: function() {
@@ -58,11 +59,11 @@ window.OmniboxView = Backbone.View.extend({
   }
 });
 
+// TODO: abstract NotificationViews
 window.NotificationView = Backbone.View.extend({
   initialize: function() {
     _.bindAll(this);
   },
-  events: { },
   render: function() {
     var notification = webkitNotifications.createNotification(
       this.model.get('user').avatar_image.url,
@@ -78,6 +79,25 @@ window.NotificationView = Backbone.View.extend({
   }
 });
 
+// TODO: abstract NotificationViews
+window.FollowerNotificationView = Backbone.View.extend({
+  initialize: function() {
+    _.bindAll(this);
+  },
+  render: function() {
+    var notification = webkitNotifications.createNotification(
+      this.model.get('avatar_image').url,
+      '@' + this.model.get('username') + ' followed you on ADN',
+      this.model.get('description') ? this.model.get('description').text : ''
+    );
+    notification.url = 'https://alpha.app.net/' + this.model.get('username');
+    notification.onclick = function() {
+      chrome.tabs.create({ url: this.url });
+      this.close();
+    }
+    notification.show();
+  }
+});
 
 window.Post = Backbone.Model.extend({
   initialize: function() {
@@ -132,6 +152,7 @@ window.Post = Backbone.Model.extend({
   }
 });
 
+// TODO: abstract collections
 var Stream = Backbone.Collection.extend({
   model: Post,
   initialize: function(options) {
@@ -165,6 +186,44 @@ var Stream = Backbone.Collection.extend({
     }, { lastId: lastId });
   }
 });
+
+// TODO: abstract collections
+var Followers = Backbone.Collection.extend({
+  model: Account,
+  initialize: function(options) {
+    _.bindAll(this);
+    this.url = options.url;
+    this.on('reset', this.findNewFollowers);
+    var followerIds = localStorage.getItem('followerIds');
+    if (followerIds === null || followerIds.length === 0) {
+      this.existingIds = [];
+    } else {
+      this.existingIds = followerIds.split(',');
+    }
+    this.update();
+    // TODO: move timeing to an option
+    window.setInterval(this.update, config.apiFollowersRequestFrequency);
+  },
+  update: function() {
+    if (window.account && window.account.get('accessToken')) {
+      this.fetch();
+    }
+  },
+  findNewFollowers: function(models) {
+    if (_.isEmpty(this.existingIds)) {
+      // Now existingIds set so don't notify of any
+    } else {
+      var newIds = _.difference(models.pluck('id'), this.existingIds);
+      _.each(newIds, function(id) {
+        var view = new FollowerNotificationView({ model: models.get(id) });
+        view.render();
+      });
+    }
+    localStorage.setItem('followerIds', models.pluck('id'));
+    this.existingIds = models.pluck('id');
+  }
+});
+
 
 /**
   * Add auth headers
