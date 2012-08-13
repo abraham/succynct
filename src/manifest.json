@@ -1,6 +1,6 @@
 {
   "name": "__MSG_extName__",
-  "version": "2012.8.12",
+  "version": "2012.8.12.1",
   "manifest_version": 2,
   "description": "__MSG_extDescription__",
   "icons": {
@@ -33,6 +33,10 @@
       "matches": [ "*://twitter.com/intent/tweet*" ],
       "css": [ "content_twitter.css" ],
       "js": [ "js/jquery-1.8.0.min.js", "content_twitter.js" ]
+    },
+    {
+      "matches": [ "https://alpha.app.net/*" ],
+      "js": [ "js/jquery-1.8.0.min.js", "js/mutation_summary.js", "content_app.js" ]
     }
   ]
 }
