@@ -92,10 +92,38 @@ window.Post = Backbone.Model.extend({
   save: function() {
     if (this.get('text') && this.get('text').length < 256) {
       // TODO: for some reason this is not adding the response to the model
-      $.post(this.url, this.attributes, this.parse);
+      var jqXHR = $.post(this.url, this.attributes)
+          .success(this.success)
+          .error(this.error);
     } else {
       return false;
     }
+  },
+  success: function(response, textStatus, jqXHR) {
+    var notification = webkitNotifications.createNotification(
+      response.user.avatar_image.url,
+      'Successfully posted to App.net',
+      response.text
+    );
+    notification.url = 'https://alpha.app.net/' + response.user.username + '/post/' + response.id;
+    notification.onclick = function() {
+      chrome.tabs.create({ url: this.url });
+      this.close();
+    }
+    // TODO: store the post locally
+    // TODO: auto close popup in 5 seconds
+    notification.show();
+  },
+  error: function() {
+    var notification = webkitNotifications.createNotification(
+      chrome.extension.getURL('/img/angle.png'),
+      'Posting to App.net failed',
+      'Please try agian.'
+    );
+    notification.onclick = function() {
+      this.close();
+    }
+    notification.show();
   }
 });
 

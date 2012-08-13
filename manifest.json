@@ -23,6 +23,9 @@
     "notifications",
     "tabs",
     "<all_urls>"
-    ],
-  "omnibox": { "keyword" : "adn" }
+  ],
+  "omnibox": { "keyword" : "adn" },
+  "web_accessible_resources": [
+    "img/angle.png"
+  ]
 }
