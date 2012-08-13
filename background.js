@@ -18,6 +18,10 @@ function onMessage(request, sender, sendResponse) {
     window.account.set({ accessToken: localStorage.getItem('accessToken') });
     window.account.fetch();
     sendResponse({ });
+  } else if (request.method === 'post' && request.action === 'posts'){
+    var post = new Post({ text: request.data.status });
+    post.save();
+    sendResponse({ });
   } else {
     sendResponse({ });
   }
