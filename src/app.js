@@ -207,7 +207,6 @@ var Followers = Backbone.Collection.extend({
       this.existingIds = followerIds.split(',');
     }
     this.update();
-    // TODO: move timeing to an option
     window.setInterval(this.update, config.apiFollowersRequestFrequency);
   },
   update: function() {
@@ -220,19 +219,20 @@ var Followers = Backbone.Collection.extend({
       // No existingIds set so don't notify of any
     } else {
       var newIds = _.difference(models.pluck('id'), this.existingIds);
-      _.each(newIds, function(id) {
-        var model = models.get(id)
-        var notification = new TextNotificationView({
-          title: 'Followed by @' + model.get('username') + ' on ADN',
-          body: model.get('description') ? model.get('description').text : '',
-          image: model.get('avatar_image').url,
-          url: 'https://alpha.app.net/' + model.get('username')
-        });
-        notification.render();
-      });
+      _.each(newIds, this.notifyOfFollower);
     }
     localStorage.setItem('followerIds', models.pluck('id'));
     this.existingIds = models.pluck('id');
+  },
+  notifyOfFollower: function(id) {
+    var model = this.get(id)
+    var notification = new TextNotificationView({
+      title: 'Followed by @' + model.get('username') + ' on ADN',
+      body: model.get('description') ? model.get('description').text : '',
+      image: model.get('avatar_image').url,
+      url: config.baseUrl + '/' + model.get('username')
+    });
+    notification.render();
   }
 });
 
