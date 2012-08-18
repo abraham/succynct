@@ -79,6 +79,7 @@ window.TextNotificationView = Backbone.View.extend({
   },
   render: function() {
     var notification = this.notification;
+    notification.type = this.options.type;
     if (this.options.url) {
       notification.url = this.options.url;
     }
@@ -87,14 +88,17 @@ window.TextNotificationView = Backbone.View.extend({
         chrome.tabs.create({ url: this.url });
       }
       this.close();
+      _gaq.push(['_trackEvent', 'Notifications', 'Click', this.options.type]);
     }
     if (this.options.timeout) {
       setTimeout(function(){
         notification.close();
+        _gaq.push(['_trackEvent', 'Notifications', 'Timeout', this.type]);
       }, this.options.timeout);
       
     }
     notification.show();
+    _gaq.push(['_trackEvent', 'Notifications', 'Show', this.options.type]);
   }
 });
 
@@ -124,7 +128,8 @@ window.Post = Backbone.Model.extend({
       body: response.text,
       image: response.user.avatar_image.url,
       url: 'https://alpha.app.net/' + response.user.username + '/post/' + response.id,
-      timeout: 5 * 1000
+      timeout: 5 * 1000,
+      type: 'PostSuccess'
     });
     notification.render();
   },
@@ -133,7 +138,8 @@ window.Post = Backbone.Model.extend({
       image: chrome.extension.getURL('/img/angle.png'),
       title: 'Posting to App.net failed',
       body: 'Please try agian. This notification will close in 10 seconds.',
-      timeout: 10 * 1000
+      timeout: 10 * 1000,
+      type: 'PostError'
     });
     notification.render();
   }
@@ -174,7 +180,8 @@ var Stream = Backbone.Collection.extend({
           image: model.get('user').avatar_image.url,
           title: 'Mentionted by @' + model.get('user').username + ' on ADN',
           body: model.get('text'),
-          url: 'https://alpha.app.net/' + model.get('user').username + '/post/' + model.get('id')
+          url: 'https://alpha.app.net/' + model.get('user').username + '/post/' + model.get('id'),
+          type: 'Mention'
         });
         notification.render();
       } else {
@@ -189,7 +196,8 @@ var Stream = Backbone.Collection.extend({
         image: chrome.extension.getURL('/img/angle.png'),
         title: 'Authentication failed',
         body: 'Click here to sign in to App.net again.',
-        url: chrome.extension.getURL('/options.html')
+        url: chrome.extension.getURL('/options.html'),
+        type: 'AuthError'
       });
       notification.render();
       window.account.unset('accessToken');
@@ -234,7 +242,8 @@ var Followers = Backbone.Collection.extend({
       title: 'Followed by @' + model.get('username') + ' on ADN',
       body: model.get('description') ? model.get('description').text : '',
       image: model.get('avatar_image').url,
-      url: config.baseUrl + '/' + model.get('username')
+      url: config.baseUrl + '/' + model.get('username'),
+      type: 'Follower'
     });
     notification.render();
   }
@@ -253,13 +262,15 @@ function attacheAuthHeader(xhr, settings) {
   if (settings.url.indexOf('https://alpha-api.app.net/') === 0) {
     xhr.setRequestHeader('Authorization', 'Bearer ' + window.account.get('accessToken'));
   }
+  _gaq.push(['_trackPageview']);
 }
 function trackRateLimit(jqXHR, settings) {
-  return;
   if (!window.env || window.env !== 'background') {
     return;
   }
   var remaining = jqXHR.getResponseHeader('X-RateLimit-Remaining');
+  _gaq.push(['_trackEvent', 'RateLimit', 'Track', 'Rate limit remaining', remaining]);
+  return;
   if (remaining) {
     RateLimit.push({
       // TODO: clean up timestamp hack

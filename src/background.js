@@ -1,4 +1,7 @@
 console.log('background.js');
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-2706568-45']);
+_gaq.push(['_trackPageview']);
 window.RateLimit = [];
 window.env = 'background';
 
@@ -40,3 +43,9 @@ chrome.extension.onMessage.addListener(onMessage);
 chrome.omnibox.setDefaultSuggestion({ description: 'Post to App.net <match>%s</match>' });
 chrome.omnibox.onInputEntered.addListener(window.omniboxview.onInputEntered);
 chrome.omnibox.onInputChanged.addListener(window.omniboxview.onInputChanged);
+
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = 'https://ssl.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
