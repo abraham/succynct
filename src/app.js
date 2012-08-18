@@ -81,10 +81,12 @@ window.TextNotificationView = Backbone.View.extend({
     var notification = this.notification;
     if (this.options.url) {
       notification.url = this.options.url;
-      notification.onclick = function() {
+    }
+    notification.onclick = function() {
+      if (this.url) {
         chrome.tabs.create({ url: this.url });
-        this.close();
       }
+      this.close();
     }
     if (this.options.timeout) {
       setTimeout(function(){
@@ -154,18 +156,13 @@ window.Post = Backbone.Model.extend({
     notification.show();
   },
   error: function() {
-    var notification = webkitNotifications.createNotification(
-      chrome.extension.getURL('/img/angle.png'),
-      'Posting to App.net failed',
-      'Please try agian. This notification will close in 10 seconds.'
-    );
-    notification.onclick = function() {
-      this.close();
-    }
-    setTimeout(function(){
-      notification.close();
-    }, 10 * 1000);
-    notification.show();
+    var notification = new TextNotificationView({
+      image: chrome.extension.getURL('/img/angle.png'),
+      title: 'Posting to App.net failed',
+      body: 'Please try agian. This notification will close in 10 seconds.',
+      timeout: 10 * 1000
+    });
+    notification.render();
   }
 });
 
