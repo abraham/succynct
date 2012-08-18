@@ -6,7 +6,13 @@ window.account = new window.Account();
 if (localStorage.getItem('accessToken')) {
   window.account.set({ accessToken: localStorage.getItem('accessToken') });
 } else {
-  chrome.tabs.create({ url: chrome.extension.getURL('options.html') });
+  var n = new TextNotificationView({
+    url: account.buildAuthUrl(),
+    title: 'Authenticate with your App.net account',
+    body: 'Click here to authenticate your App.net account and get started with Succynct.',
+    image: chrome.extension.getURL('/img/angle.png')
+  });
+  n.render();
 }
 
 window.mentions = new window.Stream({ url: 'https://alpha-api.app.net/stream/0/users/me/mentions' });
