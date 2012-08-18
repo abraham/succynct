@@ -1,4 +1,8 @@
 console.log('succynct:content_script.js');
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-2706568-45']);
+_gaq.push(['_trackPageview']);
+
 var observer = new MutationSummary({
   callback: handlePostMutations,
   queries: [
