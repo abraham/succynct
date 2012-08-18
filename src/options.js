@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function openAuthUrl() {
-  openAndCloseTab(buildAuthUrl());
+  openAndCloseTab(account.buildAuthUrl());
 }
 
 function endAuth() {
@@ -12,11 +12,9 @@ function endAuth() {
   openAndCloseTab('/options.html');
 }
 
-function buildAuthUrl() {
-  return config.authorizeUrl + '?client_id=' + config.clientId + '&response_type=token&redirect_uri=' + location.href + '&scope=' + config.apiScope;
-}
-
 function init() {
+  window.account = new Account();
+  
   $('#content').on('click', '.end-auth', endAuth);
   $('#content').on('click', '.start-auth', openAuthUrl);
   
@@ -30,9 +28,8 @@ function init() {
   if (localStorage.getItem('accessToken')) {
     $('#account').html('<div><img src="img/loader.gif"/></div>');
     window.accessToken = localStorage.getItem('accessToken');
-    window.account = new Account();
     window.account.set({ accessToken: window.accessToken });
-    window.account.fetch({ success: accountFetch });
+    window.account.fetch({ success: accountFetch, error: errorCallback });
     return;
   }
 }
@@ -40,6 +37,10 @@ function init() {
 function accountFetch(account) {
   chrome.extension.sendMessage({ method: 'put', action: 'oauth/authenticate'}, function(response) { });
   $('#account').html('<div>@<span><a href="https://alpha.app.net/' + account.get('username') + '">' + account.get('username') + '</a></span> <button class="btn end-auth btn-danger">Sign out</button></div>');
+}
+
+function errorCallback(account) {
+  $('#account').html('<div><span class="alert alert-danger">Error authenticating with App.net</span> <button class="btn btn-danger start-auth" id="account-btn">Authenticate App.net account</button></div>');
 }
 
 function saveAccessToken(accessToken) {
