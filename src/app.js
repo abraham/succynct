@@ -98,26 +98,6 @@ window.TextNotificationView = Backbone.View.extend({
   }
 });
 
-// TODO: abstract NotificationViews
-window.FollowerNotificationView = Backbone.View.extend({
-  initialize: function() {
-    _.bindAll(this);
-  },
-  render: function() {
-    var notification = webkitNotifications.createNotification(
-      this.model.get('avatar_image').url,
-      '@' + this.model.get('username') + ' followed you on ADN',
-      this.model.get('description') ? this.model.get('description').text : ''
-    );
-    notification.url = 'https://alpha.app.net/' + this.model.get('username');
-    notification.onclick = function() {
-      chrome.tabs.create({ url: this.url });
-      this.close();
-    }
-    notification.show();
-  }
-});
-
 window.Post = Backbone.Model.extend({
   initialize: function() {
     _.bindAll(this);
@@ -139,21 +119,14 @@ window.Post = Backbone.Model.extend({
     }
   },
   success: function(response, textStatus, jqXHR) {
-    var notification = webkitNotifications.createNotification(
-      response.user.avatar_image.url,
-      'Successfully posted to App.net',
-      response.text
-    );
-    notification.url = 'https://alpha.app.net/' + response.user.username + '/post/' + response.id;
-    notification.onclick = function() {
-      chrome.tabs.create({ url: this.url });
-      this.close();
-    }
-    // TODO: store the post locally
-    setTimeout(function(){
-      notification.close();
-    }, 5 * 1000);
-    notification.show();
+    var notification = new TextNotificationView({
+      title: 'Successfully posted to App.net',
+      body: response.text,
+      image: response.user.avatar_image.url,
+      url: 'https://alpha.app.net/' + response.user.username + '/post/' + response.id,
+      timeout: 5 * 1000
+    });
+    notification.render();
   },
   error: function() {
     var notification = new TextNotificationView({
@@ -244,12 +217,18 @@ var Followers = Backbone.Collection.extend({
   },
   findNewFollowers: function(models) {
     if (_.isEmpty(this.existingIds)) {
-      // Now existingIds set so don't notify of any
+      // No existingIds set so don't notify of any
     } else {
       var newIds = _.difference(models.pluck('id'), this.existingIds);
       _.each(newIds, function(id) {
-        var view = new FollowerNotificationView({ model: models.get(id) });
-        view.render();
+        var model = models.get(id)
+        var notification = new TextNotificationView({
+          title: 'Followed by @' + model.get('username') + ' on ADN',
+          body: model.get('description') ? model.get('description').text : '',
+          image: model.get('avatar_image').url,
+          url: 'https://alpha.app.net/' + model.get('username')
+        });
+        notification.render();
       });
     }
     localStorage.setItem('followerIds', models.pluck('id'));
