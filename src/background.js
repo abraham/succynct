@@ -17,6 +17,7 @@ if (localStorage.getItem('accessToken')) {
 
 window.mentions = new window.Stream({ url: 'https://alpha-api.app.net/stream/0/users/me/mentions' });
 window.followers = new window.Followers({ url: 'https://alpha-api.app.net/stream/0/users/me/followers' });
+// TODO: start tracking friends too
 
 window.omniboxview = new window.OmniboxView();
 
