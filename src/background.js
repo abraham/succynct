@@ -5,6 +5,7 @@ window.env = 'background';
 window.account = new window.Account();
 if (localStorage.getItem('accessToken')) {
   window.account.set({ accessToken: localStorage.getItem('accessToken') });
+  window.account.fetch();
 } else {
   var n = new TextNotificationView({
     url: account.buildAuthUrl(),

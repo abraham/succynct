@@ -163,6 +163,10 @@ var Stream = Backbone.Collection.extend({
     }
     
     models.each(function(model) {
+      if (model.get('user').id === account.get('id')) {
+        // Ignore notifications from yourself
+        return;
+      }
       // TODO: can't rely on ids being ints
       if (lastId && parseInt(model.get('id')) > parseInt(this.lastId)) {
         // If lastId and newer
