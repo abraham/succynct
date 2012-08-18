@@ -14,6 +14,9 @@ window.Account = Backbone.Model.extend({
       this.set({ accessToken: localStorage.getItem('accessToken') });
       this.fetch();
     }
+  },
+  buildAuthUrl: function() {
+    return config.authorizeUrl + '?client_id=' + config.clientId + '&response_type=token&redirect_uri=' + chrome.extension.getURL('/options.html') + '&scope=' + config.apiScope;
   }
 });
 
@@ -59,21 +62,35 @@ window.OmniboxView = Backbone.View.extend({
   }
 });
 
-// TODO: abstract NotificationViews
-window.NotificationView = Backbone.View.extend({
-  initialize: function() {
+/**
+* Params: image, title, body, url, and timeout;
+*/
+window.TextNotificationView = Backbone.View.extend({
+  initialize: function(options) {
+    // TODO: Move to a model?
     _.bindAll(this);
+    this.options = options;
+    // TODO: move to Notifications. They support tags but not images yet?
+    this.notification = webkitNotifications.createNotification(
+      this.options.image,
+      this.options.title,
+      this.options.body
+    );
   },
   render: function() {
-    var notification = webkitNotifications.createNotification(
-      this.model.get('user').avatar_image.url,
-      '@' + this.model.get('user').username + ' mentioned you on ADN',
-      this.model.get('text')
-    );
-    notification.url = 'https://alpha.app.net/' + this.model.get('user').username + '/post/' + this.model.get('id');
-    notification.onclick = function() {
-      chrome.tabs.create({ url: this.url });
-      this.close();
+    var notification = this.notification;
+    if (this.options.url) {
+      notification.url = this.options.url;
+      notification.onclick = function() {
+        chrome.tabs.create({ url: this.url });
+        this.close();
+      }
+    }
+    if (this.options.timeout) {
+      setTimeout(function(){
+        notification.close();
+      }, this.options.timeout);
+      
     }
     notification.show();
   }
@@ -165,7 +182,7 @@ var Stream = Backbone.Collection.extend({
   },
   update: function() {
     if (window.account && window.account.get('accessToken')) {
-      this.fetch();
+      this.fetch({ error: this.error });
     }
   },
   renderMentionNotification: function(models) {
@@ -179,11 +196,30 @@ var Stream = Backbone.Collection.extend({
       // TODO: can't rely on ids being ints
       if (lastId && parseInt(model.get('id')) > parseInt(this.lastId)) {
         // If lastId and newer
-        var view = new NotificationView({ model: model });
-        view.render();
+        var notification = new TextNotificationView({
+          image: model.get('user').avatar_image.url,
+          title: 'Mentionted by @' + model.get('user').username + ' on ADN',
+          body: model.get('text'),
+          url: 'https://alpha.app.net/' + model.get('user').username + '/post/' + model.get('id')
+        });
+        notification.render();
       } else {
+        // Older notification or first fetch
       }
     }, { lastId: lastId });
+  },
+  error: function(collection, xhr) {
+    if (xhr.status === 401) {
+      console.log('Invalid access_token');
+      var notification = new TextNotificationView({
+        image: chrome.extension.getURL('/img/angle.png'),
+        title: 'Authentication failed',
+        body: 'Click here to sign in to App.net again.',
+        url: chrome.extension.getURL('/options.html')
+      });
+      notification.render();
+      window.account.unset('accessToken');
+    }
   }
 });
 
@@ -223,7 +259,6 @@ var Followers = Backbone.Collection.extend({
     this.existingIds = models.pluck('id');
   }
 });
-
 
 /**
   * Add auth headers
