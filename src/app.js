@@ -7,7 +7,7 @@ window.Account = Backbone.Model.extend({
   },
   url: function() {
     // TODO: The access_token shouldn't be needed anymore
-    return 'https://alpha-api.app.net/stream/0/users/me?access_token=' + this.get('accessToken');
+    return 'https://alpha-api.app.net/stream/0/users/me';
   },
   checkAuth: function() {
     if (!this.get('accessToken') && localStorage.getItem('accessToken')) {
