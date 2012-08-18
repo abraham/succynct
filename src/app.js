@@ -240,6 +240,9 @@ var Followers = Backbone.Collection.extend({
   * Add auth headers
   */
 function attacheAuthHeader(xhr, settings) {
+  if (!navigator.onLine) {
+    return false;
+  }
   if (!window.account || !window.account.get('accessToken')) {
     return;
   }
