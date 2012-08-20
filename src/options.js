@@ -5,6 +5,10 @@ _gaq.push(['_trackPageview']);
 
 document.addEventListener('DOMContentLoaded', function () {
   init();
+  
+  $('body').on('click', 'a', function(event) {
+    $(event.target).attr('target', '_blank');
+  });
 });
 
 function openAuthUrl() {
@@ -40,7 +44,7 @@ function init() {
 
 function accountFetch(account) {
   chrome.extension.sendMessage({ method: 'put', action: 'oauth/authenticate'}, function(response) { });
-  $('#account').html('<div>@<span><a href="https://alpha.app.net/' + account.get('username') + '">' + account.get('username') + '</a></span> <button class="btn end-auth btn-danger">Sign out</button></div>');
+  $('#account').html('<div><span><a href="https://alpha.app.net/' + account.get('username') + '">@' + account.get('username') + '</a></span> <button class="btn end-auth btn-danger">Sign out</button></div>');
 }
 
 function errorCallback(account) {
