@@ -24,6 +24,7 @@ function init() {
   $('#content').on('click', '.end-auth', endAuth);
   $('#content').on('click', '.start-auth', openAuthUrl);
   $('#content').on('click', 'input[type="checkbox"]', toggleCheckbox);
+  $('#content').on('change', 'input[type="number"]', changeNumber);
   $('#content').on('click', 'a', function(event) {
     $(event.target).attr('target', '_blank');
   });
@@ -56,13 +57,40 @@ function displayOptions(options) {
     var name = $element.closest('.control-group').data('option-name');
     $element.prop('checked', options[name]);
   });
+  $('input[type="number"]').each(function(index, element) {
+    var $element = $(element);
+    var $control = $element.closest('.control-group');
+    var name = $control.data('option-name');
+    var defaultName = $control.data('option-default');
+    if ($control.data('format') === 'minutes') {
+      $element.prop('value', options[name] / 1000 / 60 || options[defaultName] / 1000 / 60);
+    } else if($control.data('format') === 'seconds') {
+      $element.prop('value', options[name] / 1000 || options[defaultName] / 1000);
+    } else {
+      $element.prop('value', options[name] || options[defaultName]);
+    }
+  });
 }
 
 function toggleCheckbox(event, value) {
   var $target = $(event.target);
-  var newOptions = {};
+  var newOptions = { };
   newOptions[$target.closest('.control-group').data('option-name')] = $target.prop('checked');
-  chrome.extension.sendMessage({ method: 'put', action: 'options', data: $.extend(options, newOptions ) });
+  chrome.extension.sendMessage({ method: 'put', action: 'options', data: $.extend(options, newOptions) });
+}
+
+function changeNumber(event) {
+  var $target = $(event.target);
+  var $control = $target.closest('.control-group');
+  var val = parseInt($target.val());
+  if ($control.data('format') === 'minutes') {
+    val = val * 60 * 1000;
+  } else if ($control.data('format') === 'seconds') {
+    val = val * 1000;
+  }
+  var newOptions = { };
+  newOptions[$control.data('option-name')] = val;
+  chrome.extension.sendMessage({ method: 'put', action: 'options', data: $.extend(options, newOptions) });
 }
 
 function accountFetch(account) {

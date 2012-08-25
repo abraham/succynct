@@ -1,11 +1,43 @@
 console.log('background.js');
+/**
+* Enable usage tracking
+*/
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', config.get('googleAnalyticsAccount')]);
 _gaq.push(['_trackPageview']);
-window.RateLimit = [];
-config.set('environment', 'background');
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = 'https://ssl.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
 
+/**
+* Create objects
+*/
+// TODO: move ratelimit to config
+window.RateLimit = [];
 window.account = new window.Account();
+window.mentions = new window.Stream({ url: 'https://alpha-api.app.net/stream/0/users/me/mentions' });
+window.followers = new window.Followers({ url: 'https://alpha-api.app.net/stream/0/users/me/followers' });
+// TODO: start tracking friends too
+window.omniboxview = new window.OmniboxView();
+
+/**
+* Set attributes
+*/
+config.set('environment', 'background');
+chrome.omnibox.setDefaultSuggestion({ description: 'Post to App.net <match>%s</match>' });
+
+/**
+* Wire events
+*/
+chrome.extension.onMessage.addListener(onMessage);
+chrome.omnibox.onInputEntered.addListener(window.omniboxview.onInputEntered);
+chrome.omnibox.onInputChanged.addListener(window.omniboxview.onInputChanged);
+mentions.on('reset', mentions.renderMentionNotification);
+config.on('change:mentionNotifications', mentions.toggleNotifications);
+config.on('change:mentionFrequency', mentions.changeFrequency);
+
 if (localStorage.getItem('accessToken')) {
   window.account.set({ accessToken: localStorage.getItem('accessToken') });
   window.account.fetch();
@@ -19,11 +51,11 @@ if (localStorage.getItem('accessToken')) {
   n.render();
 }
 
-window.mentions = new window.Stream({ url: 'https://alpha-api.app.net/stream/0/users/me/mentions' });
-window.followers = new window.Followers({ url: 'https://alpha-api.app.net/stream/0/users/me/followers' });
-// TODO: start tracking friends too
-
-window.omniboxview = new window.OmniboxView();
+/**
+* Enable features
+*/
+mentions.update();
+mentions.setInterval();
 
 function onMessage(request, sender, sendResponse) {
   if (request.method === 'put' && request.action === 'oauth/authenticate') {
@@ -44,14 +76,3 @@ function onMessage(request, sender, sendResponse) {
     sendResponse({ });
   }
 }
-
-chrome.extension.onMessage.addListener(onMessage);
-chrome.omnibox.setDefaultSuggestion({ description: 'Post to App.net <match>%s</match>' });
-chrome.omnibox.onInputEntered.addListener(window.omniboxview.onInputEntered);
-chrome.omnibox.onInputChanged.addListener(window.omniboxview.onInputChanged);
-
-(function() {
-  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-  ga.src = 'https://ssl.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();

@@ -155,13 +155,33 @@ var Stream = Backbone.Collection.extend({
   initialize: function(options) {
     _.bindAll(this);
     this.url = options.url;
-    this.on('reset', this.renderMentionNotification);
-    this.update();
-    // TODO: move timeing to an option
-    window.setInterval(this.update, config.get('apiRequestFrequency'));
+  },
+  setInterval: function(frequency) {
+    if (frequency && typeof(frequency) === 'string') {
+      frequency = parseInt(frequency);
+    }
+    this.intervalID = window.setInterval(this.update, frequency || config.get('mentionFrequency') || config.get('defaultMentionFrequency'));
+    return this;
+  },
+  clearInterval: function() {
+    window.clearInterval(this.intervalID);
+    return this;
+  },
+  toggleNotifications: function(model, enabled, other) {
+    if (enabled) {
+      this.setInterval();
+    } else {
+      this.clearInterval();
+    }
+  },
+  changeFrequency: function(model, frequency, other) {
+    this.clearInterval();
+    if (frequency) {
+      this.setInterval(frequency)
+    }
   },
   update: function() {
-    if (window.account && window.account.get('accessToken')) {
+    if (window.account && window.account.get('accessToken') && config.get('mentionNotifications')) {
       this.fetch({ error: this.error });
     }
   },

@@ -51,6 +51,15 @@
                   </label>
                 </div>
               </div>
+              <div class="control-group" data-option-name='mentionFrequency' data-option-default='defaultMentionFrequency' data-format="seconds">
+                <label class="control-label" for="mention-frequency">Mention frequency</label>
+                <div class="controls">
+                  <label class="textbox">
+                    Every <input type="number" class="input-mini" id="mention-frequency" min="5" max="900" required> seconds
+                    <span class='help-block'>How often do you want to be notified of new mentions?</span>
+                  </label>
+                </div>
+              </div>
               <!-- followers -->
               <div class="control-group" data-option-name='followerNotifications'>
                 <label class="control-label" for="follower-notifications">Follower notifications</label>
@@ -61,13 +70,22 @@
                   </label>
                 </div>
               </div>
+              <div class="control-group" data-option-name='followerFrequnecy' data-option-default='defaultFollowerFrequency' data-format="minutes">
+                <label class="control-label" for="follower-frequency">Follower frequency</label>
+                <div class="controls">
+                  <label class="textbox">
+                    Every <input type="number" class="input-mini" id="follower-frequency" min="1" max="60" required> minutes
+                    <span class='help-block'>How often do you want to be notified of new followers?</span>
+                  </label>
+                </div>
+              </div>
               <!-- dismiss -->
               <div class="control-group" data-option-name='autoDismissNotifications'>
                 <label class="control-label" for="auto-dismiss-notifications">Auto-dismiss</label>
                 <div class="controls">
                   <label class="checkbox">
                     <input type="checkbox" id="auto-dismiss-notifications">
-                    Automatically dismiss all notifications if browser is not active
+                    Automatically dismiss notifications if you have recently been active
                   </label>
                 </div>
               </div>

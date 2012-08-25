@@ -8,6 +8,8 @@ window.config = new Config({
   apiScope: 'stream,write_post,follow,messages',
   apiRequestFrequency: 15 * 1000,
   apiFollowersRequestFrequency: 15 * 60 * 1000,
+  defaultMentionFrequency: 15 * 1000,
+  defaultFollowerFrequency: 15 * 60 * 1000,
   autoDismissNotifications: false,
   mentionNotifications: true,
   followerNotifications: true
