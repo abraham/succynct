@@ -1,5 +1,6 @@
 window.config = new Config({
-  clientId: '',
+  clientId: 'UnSbSEb6EFHUZt3ygTwPSTdcdGd8Lvey',
+  googleAnalyticsAccount: 'UA-2706568-45',
   authorizeUrl: 'https://alpha.app.net/oauth/authenticate',
   accessTokenUrl: 'https://alpha.app.net/oauth/access_token',
   apiBaseUrl: 'https://alpha-api.app.net',

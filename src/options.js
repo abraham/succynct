@@ -1,7 +1,7 @@
 console.log('options.js');
 var options = {};
 var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-2706568-45']);
+_gaq.push(['_setAccount', config.get('googleAnalyticsAccount')]);
 _gaq.push(['_trackPageview']);
 
 document.addEventListener('DOMContentLoaded', function () {
