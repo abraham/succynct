@@ -3,7 +3,7 @@ var _gaq = _gaq || [];
 _gaq.push(['_setAccount', config.get('googleAnalyticsAccount')]);
 _gaq.push(['_trackPageview']);
 window.RateLimit = [];
-window.env = 'background';
+config.set('environment', 'background');
 
 window.account = new window.Account();
 if (localStorage.getItem('accessToken')) {

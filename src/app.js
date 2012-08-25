@@ -273,7 +273,7 @@ function attacheAuthHeader(xhr, settings) {
   _gaq.push(['_trackPageview']);
 }
 function trackRateLimit(jqXHR, settings) {
-  if (!window.env || window.env !== 'background') {
+  if (config.get('environment') !== 'background') {
     return;
   }
   var remaining = jqXHR.getResponseHeader('X-RateLimit-Remaining');
