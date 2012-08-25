@@ -88,7 +88,7 @@ window.TextNotificationView = Backbone.View.extend({
         chrome.tabs.create({ url: this.url });
       }
       this.close();
-      _gaq.push(['_trackEvent', 'Notifications', 'Click', this.options.type]);
+      _gaq.push(['_trackEvent', 'Notifications', 'Click', this.type]);
     }
     if (this.options.timeout) {
       setTimeout(function(){
