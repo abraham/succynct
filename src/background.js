@@ -34,6 +34,12 @@ function onMessage(request, sender, sendResponse) {
     var post = new Post({ text: request.data.status });
     post.save();
     sendResponse({ });
+  } else if (request.method === 'get' && request.action === 'options'){
+    sendResponse(config.options);
+  } else if (request.method === 'put' && request.action === 'options'){
+    config.options = request.data;
+    // TODO: save options to localStorage
+    sendResponse({ });
   } else {
     sendResponse({ });
   }

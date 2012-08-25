@@ -1,14 +1,11 @@
 console.log('options.js');
+var options = {};
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-2706568-45']);
 _gaq.push(['_trackPageview']);
 
 document.addEventListener('DOMContentLoaded', function () {
   init();
-  
-  $('body').on('click', 'a', function(event) {
-    $(event.target).attr('target', '_blank');
-  });
 });
 
 function openAuthUrl() {
@@ -16,6 +13,7 @@ function openAuthUrl() {
 }
 
 function endAuth() {
+  // TODO: clear options and sendMessage to bg
   localStorage.clear();
   openAndCloseTab('/options.html');
 }
@@ -25,13 +23,23 @@ function init() {
   
   $('#content').on('click', '.end-auth', endAuth);
   $('#content').on('click', '.start-auth', openAuthUrl);
+  $('#content').on('click', 'input[type="checkbox"]', toggleCheckbox);
+  $('#content').on('click', 'a', function(event) {
+    $(event.target).attr('target', '_blank');
+  });
   
+  // TODO: move callback to different html file
   if (isCallback()) {
     $('#account').html('<div><img src="img/loader.gif"/></div>');
     window.accessToken = saveAccessToken(parseAccessToken());
     openAndCloseTab('/options.html');
     return;
   }
+  
+  chrome.extension.sendMessage({ method: 'get', action: 'options'}, function(response) {
+    options = response;
+    displayOptions(response);
+  });
   
   if (localStorage.getItem('accessToken')) {
     $('#account').html('<div><img src="img/loader.gif"/></div>');
@@ -40,6 +48,21 @@ function init() {
     window.account.fetch({ success: accountFetch, error: errorCallback });
     return;
   }
+}
+
+function displayOptions(options) {
+  $('input[type="checkbox"]').each(function(index, element) {
+    var $element = $(element);
+    var name = $element.closest('.control-group').data('option-name');
+    $element.prop('checked', options[name]);
+  });
+}
+
+function toggleCheckbox(event, value) {
+  var $target = $(event.target);
+  var newOptions = {};
+  newOptions[$target.closest('.control-group').data('option-name')] = $target.prop('checked');
+  chrome.extension.sendMessage({ method: 'put', action: 'options', data: $.extend(options, newOptions ) });
 }
 
 function accountFetch(account) {

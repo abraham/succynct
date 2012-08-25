@@ -6,5 +6,10 @@ var config = {
   baseUrl: 'https://alpha.app.net',
   apiScope: 'stream,write_post,follow,messages',
   apiRequestFrequency: 15 * 1000,
-  apiFollowersRequestFrequency: 15 * 60 * 1000
+  apiFollowersRequestFrequency: 15 * 60 * 1000,
+  options: {
+    autoDismissNotifications: false,
+    mentionNotifications: true,
+    followerNotifications: true
+  }
 }

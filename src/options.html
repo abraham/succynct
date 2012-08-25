@@ -34,10 +34,41 @@
           <div class="span8">
             <h3>Options</h3>
             <div class="form-horizontal">
+              <!-- account -->
               <div class="control-group">
                 <label class="control-label" for="account-btn">Account</label>
                 <div class="controls" id='account'>
                   <button class="btn start-auth" id="account-btn">Authenticate App.net account</button>
+                </div>
+              </div>
+              <!-- mentions -->
+              <div class="control-group" data-option-name='mentionNotifications'>
+                <label class="control-label" for="mention-notifications">Mention notifications</label>
+                <div class="controls">
+                  <label class="checkbox">
+                    <input type="checkbox" id="mention-notifications">
+                    Notify of new posts mentioning you
+                  </label>
+                </div>
+              </div>
+              <!-- followers -->
+              <div class="control-group" data-option-name='followerNotifications'>
+                <label class="control-label" for="follower-notifications">Follower notifications</label>
+                <div class="controls">
+                  <label class="checkbox">
+                    <input type="checkbox" id="follower-notifications">
+                    Notify of new followers
+                  </label>
+                </div>
+              </div>
+              <!-- dismiss -->
+              <div class="control-group" data-option-name='autoDismissNotifications'>
+                <label class="control-label" for="auto-dismiss-notifications">Auto-dismiss</label>
+                <div class="controls">
+                  <label class="checkbox">
+                    <input type="checkbox" id="auto-dismiss-notifications">
+                    Automatically dismiss all notifications if browser is not active
+                  </label>
                 </div>
               </div>
             </div>
@@ -48,7 +79,7 @@
             <ul>
               <li>Mention notifications</li>
               <li>Follower notifications</li>
-              <li>Post from the omnibox</li>
+              <li>Post from the omnibox by typing <i>"adn" &lt;tab&gt; "msg" &lt;enter&gt;</i></li>
               <li>Share other people's posts</li>
               <li>Post to ADN buttons on Twitter share intents</li>
               <li>View profiles from the omnibox</li>
