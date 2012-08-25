@@ -1,3 +1,5 @@
+window.Config = Backbone.Model.extend({ });
+
 window.Account = Backbone.Model.extend({
   initialize: function() {
     _.bindAll(this);
@@ -6,7 +8,6 @@ window.Account = Backbone.Model.extend({
     }
   },
   url: function() {
-    // TODO: The access_token shouldn't be needed anymore
     return 'https://alpha-api.app.net/stream/0/users/me';
   },
   checkAuth: function() {
@@ -16,7 +17,10 @@ window.Account = Backbone.Model.extend({
     }
   },
   buildAuthUrl: function() {
-    return config.authorizeUrl + '?client_id=' + config.clientId + '&response_type=token&redirect_uri=' + chrome.extension.getURL('/options.html') + '&scope=' + config.apiScope;
+    return config.get('authorizeUrl')
+     + '?client_id=' + config.get('clientId')
+     + '&response_type=token&redirect_uri=' + chrome.extension.getURL('/options.html')
+     + '&scope=' + config.get('apiScope');
   }
 });
 
@@ -154,7 +158,7 @@ var Stream = Backbone.Collection.extend({
     this.on('reset', this.renderMentionNotification);
     this.update();
     // TODO: move timeing to an option
-    window.setInterval(this.update, config.apiRequestFrequency);
+    window.setInterval(this.update, config.get('apiRequestFrequency'));
   },
   update: function() {
     if (window.account && window.account.get('accessToken')) {
@@ -219,7 +223,7 @@ var Followers = Backbone.Collection.extend({
       this.existingIds = followerIds.split(',');
     }
     this.update();
-    window.setInterval(this.update, config.apiFollowersRequestFrequency);
+    window.setInterval(this.update, config.get('apiFollowersRequestFrequency'));
   },
   update: function() {
     if (window.account && window.account.get('accessToken')) {
@@ -242,7 +246,7 @@ var Followers = Backbone.Collection.extend({
       title: 'Followed by @' + model.get('username') + ' on ADN',
       body: model.get('description') ? model.get('description').text : '',
       image: model.get('avatar_image').url,
-      url: config.baseUrl + '/' + model.get('username'),
+      url: config.get('baseUrl') + '/' + model.get('username'),
       type: 'Follower'
     });
     notification.render();
@@ -256,6 +260,10 @@ function attacheAuthHeader(xhr, settings) {
   if (!navigator.onLine) {
     return false;
   }
+  // Opt-in to new API features
+  // if (settings.url.indexOf('https://alpha-api.app.net/') === 0) {
+  //   xhr.setRequestHeader('X-ADN-Migration-Overrides', 'response_envelope=0');
+  // }
   if (!window.account || !window.account.get('accessToken')) {
     return;
   }

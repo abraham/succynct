@@ -1,4 +1,4 @@
-var config = {
+window.config = new Config({
   clientId: '',
   authorizeUrl: 'https://alpha.app.net/oauth/authenticate',
   accessTokenUrl: 'https://alpha.app.net/oauth/access_token',
@@ -7,9 +7,7 @@ var config = {
   apiScope: 'stream,write_post,follow,messages',
   apiRequestFrequency: 15 * 1000,
   apiFollowersRequestFrequency: 15 * 60 * 1000,
-  options: {
-    autoDismissNotifications: false,
-    mentionNotifications: true,
-    followerNotifications: true
-  }
-}
+  autoDismissNotifications: false,
+  mentionNotifications: true,
+  followerNotifications: true
+});
