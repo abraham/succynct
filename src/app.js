@@ -1,7 +1,6 @@
 window.Config = Backbone.Model.extend({
   initialize: function() {
     _.bindAll(this);
-    window.setInterval(this.saveRateLimit, 1 * 60 * 1000);
   },
   saveRateLimit: function() {
     if (this.get('currentRateLimit')) {
@@ -11,6 +10,10 @@ window.Config = Backbone.Model.extend({
       this.set({ 'rateLimitHistory': rateLimitHistory });
       this.unset('currentRateLimit');
     }
+    return this;
+  },
+  setInterval: function() {
+    window.setInterval(this.saveRateLimit, 1 * 60 * 1000);
     return this;
   }
 });

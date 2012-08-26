@@ -68,6 +68,7 @@ if (localStorage.getItem('accessToken')) {
 */
 mentions.update().setInterval();
 followers.update().setInterval();
+config.saveRateLimit().setInterval();
 
 function onMessage(request, sender, sendResponse) {
   if (request.method === 'put' && request.action === 'oauth/authenticate') {
