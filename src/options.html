@@ -8,12 +8,41 @@
       body {
         padding-top: 60px;
       }
+      
+      /* Graph classes */
+      path {
+        stroke: steelblue;
+        stroke-width: 1;
+        fill: none;
+      }
+      
+      .axis {
+        shape-rendering: crispEdges;
+      }
+      
+      .x.axis line {
+        stroke: lightgrey;
+      }
+      
+      .x.axis .minor {
+        stroke-opacity: .5;
+      }
+      
+      .x.axis path {
+        display: none;
+      }
+      
+      .y.axis line, .y.axis path {
+        fill: none;
+        stroke: #000;
+      }
     </style>
     
     <script src="/js/jquery-1.8.0.min.js"></script>
     <script src="/js/underscore-min.js"></script>
     <script src="/js/backbone-min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/d3.v2.min.js"></script>
     <script src="/app.js"></script>
     <script src="/config.js"></script>
     <script src="/options.js"></script>
@@ -104,6 +133,11 @@
               <li>Search #hashtags from the omnibox</li>
             </ul>
           </div>
+        </div>
+        <div class='row'>
+          <h3>Rate limit history</h3>
+          <span class='help-block'>Each ADN account is limited to 5000 requests an hour. If you go beyond that notifications will stop working. The rate limit for up to the last 1024 minutes is shown.</span>
+          <div id='graph'>
         </div>
       </div>
       
