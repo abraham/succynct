@@ -149,18 +149,16 @@ window.Post = Backbone.Model.extend({
   }
 });
 
-// TODO: abstract collections
-var Stream = Backbone.Collection.extend({
-  model: Post,
+var Polling = Backbone.Collection.extend({
   initialize: function(options) {
     _.bindAll(this);
-    this.url = options.url;
+    _.extend(this, options);
   },
   setInterval: function(frequency) {
     if (frequency && typeof(frequency) === 'string') {
       frequency = parseInt(frequency);
     }
-    this.intervalID = window.setInterval(this.update, frequency || config.get('mentionFrequency') || config.get('defaultMentionFrequency'));
+    this.intervalID = window.setInterval(this.update, frequency || config.get(this.configFrequencyName) || config.get(this.configDefaultFrequencyName));
     return this;
   },
   clearInterval: function() {
@@ -177,41 +175,13 @@ var Stream = Backbone.Collection.extend({
   changeFrequency: function(model, frequency, other) {
     this.clearInterval();
     if (frequency) {
-      this.setInterval(frequency)
+      this.setInterval(frequency);
     }
   },
   update: function() {
-    if (window.account && window.account.get('accessToken') && config.get('mentionNotifications')) {
+    if (window.account && window.account.get('accessToken') && config.get(this.configName)) {
       this.fetch({ error: this.error });
     }
-  },
-  renderMentionNotification: function(models) {
-    var lastId = localStorage.getItem('lastId');
-    
-    if (models.length > 0) {
-      localStorage.setItem('lastId', models.at(0).get('id'));
-    }
-    
-    models.each(function(model) {
-      if (model.get('user').id === account.get('id')) {
-        // Ignore notifications from yourself
-        return;
-      }
-      // TODO: can't rely on ids being ints
-      if (lastId && parseInt(model.get('id')) > parseInt(this.lastId)) {
-        // If lastId and newer
-        var notification = new TextNotificationView({
-          image: model.get('user').avatar_image.url,
-          title: 'Mentionted by @' + model.get('user').username + ' on ADN',
-          body: model.get('text'),
-          url: 'https://alpha.app.net/' + model.get('user').username + '/post/' + model.get('id'),
-          type: 'Mention'
-        });
-        notification.render();
-      } else {
-        // Older notification or first fetch
-      }
-    }, { lastId: lastId });
   },
   error: function(collection, xhr) {
     if (xhr.status === 401) {
@@ -225,7 +195,59 @@ var Stream = Backbone.Collection.extend({
       });
       notification.render();
       window.account.unset('accessToken');
+    } else {
+      console.log('Unkown error');
+      var notification = new TextNotificationView({
+        image: chrome.extension.getURL('/img/angle.png'),
+        title: 'Unkown error checking for posts',
+        body: 'If you get this a lot please ping @abraham',
+        url: 'https://alpha.app.net/abraham',
+        type: 'UnknownError'
+      });
+      notification.render();
     }
+    return this;
+  }
+});
+
+var Posts = Polling.extend({
+  model: Post,
+  renderNotification: function(model, index, array) {
+    if (this.notificationType === 'mentions') {
+      this.renderMentionNotification(model);
+    } else {
+      console.log('this.notificationType', this.notificationType);
+    }
+  },
+  renderMentionNotification: function(model) {
+    var notification = new TextNotificationView({
+      image: model.get('user').avatar_image.url,
+      title: 'Mentionted by @' + model.get('user').username + ' on ADN',
+      body: model.get('text'),
+      url: 'https://alpha.app.net/' + model.get('user').username + '/post/' + model.get('id'),
+      type: 'Mention'
+    });
+    notification.render();
+  },
+  filterNewPosts: function() {
+    var models = [];
+    var lastCreatedAt = localStorage.getItem(this.configName + '_lastCreatedAt');
+    // Don't notify for new polling channels
+    if (!lastCreatedAt) {
+      localStorage.setItem(this.configName + '_lastCreatedAt', (new Date()).getTime());
+      return this;
+    }
+    
+    // Reject posts by authenticated account
+    models = this.reject(function(post){ return post.get('user').id === account.get('id'); });
+    // Filter out old posts
+    models = models.filter(function(post){ return (new Date(post.get('created_at'))).getTime() > parseInt(lastCreatedAt); });
+    
+    // Store latest created_at date for future matches
+    if (_.first(models)) {
+      localStorage.setItem(this.configName + '_lastCreatedAt', (new Date(_.first(models).get('created_at'))).getTime());
+    }
+    _.each(models, this.renderNotification);
   }
 });
 

@@ -17,7 +17,14 @@ _gaq.push(['_trackPageview']);
 // TODO: move ratelimit to config
 window.RateLimit = [];
 window.account = new window.Account();
-window.mentions = new window.Stream({ url: 'https://alpha-api.app.net/stream/0/users/me/mentions' });
+// window.mentions = new window.Stream({ url: 'https://alpha-api.app.net/stream/0/users/me/mentions' });
+window.mentions = new Posts({
+  url: 'https://alpha-api.app.net/stream/0/users/me/mentions',
+  configName: 'mentionNotifications',
+  configFrequencyName: 'mentionFrequency',
+  configDefaultFrequencyName: 'defaultMentionFrequency',
+  notificationType: 'mentions'
+});
 window.followers = new window.Followers({ url: 'https://alpha-api.app.net/stream/0/users/me/followers' });
 // TODO: start tracking friends too
 window.omniboxview = new window.OmniboxView();
@@ -31,12 +38,12 @@ chrome.omnibox.setDefaultSuggestion({ description: 'Post to App.net <match>%s</m
 /**
 * Wire events
 */
+config.on('change:mentionNotifications', mentions.toggleNotifications);
+config.on('change:mentionFrequency', mentions.changeFrequency);
 chrome.extension.onMessage.addListener(onMessage);
 chrome.omnibox.onInputEntered.addListener(window.omniboxview.onInputEntered);
 chrome.omnibox.onInputChanged.addListener(window.omniboxview.onInputChanged);
-mentions.on('reset', mentions.renderMentionNotification);
-config.on('change:mentionNotifications', mentions.toggleNotifications);
-config.on('change:mentionFrequency', mentions.changeFrequency);
+mentions.on('reset', mentions.filterNewPosts);
 
 if (localStorage.getItem('accessToken')) {
   window.account.set({ accessToken: localStorage.getItem('accessToken') });
