@@ -38,7 +38,7 @@ function init() {
   }
   
   chrome.extension.sendMessage({ method: 'get', action: 'options'}, function(response) {
-    options = response;
+    config.set(response);
     displayOptions(response);
   });
   
