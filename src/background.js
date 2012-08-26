@@ -25,7 +25,14 @@ window.mentions = new Posts({
   configDefaultFrequencyName: 'defaultMentionFrequency',
   notificationType: 'mentions'
 });
-window.followers = new window.Followers({ url: 'https://alpha-api.app.net/stream/0/users/me/followers' });
+// window.followers = new window.Followers({ url: 'https://alpha-api.app.net/stream/0/users/me/followers' });
+window.followers = new Accounts({
+  url: 'https://alpha-api.app.net/stream/0/users/me/followers',
+  configName: 'followerNotifications',
+  configFrequencyName: 'followerFrequency',
+  configDefaultFrequencyName: 'defaultFollowerFrequency',
+  notificationType: 'followers'
+});
 // TODO: start tracking friends too
 window.omniboxview = new window.OmniboxView();
 
@@ -44,6 +51,7 @@ chrome.extension.onMessage.addListener(onMessage);
 chrome.omnibox.onInputEntered.addListener(window.omniboxview.onInputEntered);
 chrome.omnibox.onInputChanged.addListener(window.omniboxview.onInputChanged);
 mentions.on('reset', mentions.filterNewPosts);
+followers.on('reset', followers.filterNewFollowers);
 
 if (localStorage.getItem('accessToken')) {
   window.account.set({ accessToken: localStorage.getItem('accessToken') });
@@ -61,8 +69,8 @@ if (localStorage.getItem('accessToken')) {
 /**
 * Enable features
 */
-mentions.update();
-mentions.setInterval();
+mentions.update().setInterval();
+followers.update().setInterval();
 
 function onMessage(request, sender, sendResponse) {
   if (request.method === 'put' && request.action === 'oauth/authenticate') {

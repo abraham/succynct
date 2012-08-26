@@ -182,6 +182,7 @@ var Polling = Backbone.Collection.extend({
     if (window.account && window.account.get('accessToken') && config.get(this.configName)) {
       this.fetch({ error: this.error });
     }
+    return this;
   },
   error: function(collection, xhr) {
     if (xhr.status === 401) {
@@ -222,7 +223,7 @@ var Posts = Polling.extend({
   renderMentionNotification: function(model) {
     var notification = new TextNotificationView({
       image: model.get('user').avatar_image.url,
-      title: 'Mentionted by @' + model.get('user').username + ' on ADN',
+      title: 'Mentioned by @' + model.get('user').username + ' on ADN',
       body: model.get('text'),
       url: 'https://alpha.app.net/' + model.get('user').username + '/post/' + model.get('id'),
       type: 'Mention'
@@ -251,47 +252,46 @@ var Posts = Polling.extend({
   }
 });
 
-// TODO: abstract collections
-var Followers = Backbone.Collection.extend({
+var Accounts = Polling.extend({
   model: Account,
   initialize: function(options) {
     _.bindAll(this);
-    this.url = options.url;
-    this.on('reset', this.findNewFollowers);
-    var followerIds = localStorage.getItem('followerIds');
-    if (followerIds === null || followerIds.length === 0) {
+    _.extend(this, options);
+    var ids = localStorage.getItem(this.configName + '_ids');
+    if (ids === null || ids.length === 0) {
       this.existingIds = [];
     } else {
-      this.existingIds = followerIds.split(',');
-    }
-    this.update();
-    window.setInterval(this.update, config.get('apiFollowersRequestFrequency'));
-  },
-  update: function() {
-    if (window.account && window.account.get('accessToken')) {
-      this.fetch();
+      this.existingIds = ids.split(',');
     }
   },
-  findNewFollowers: function(models) {
-    if (_.isEmpty(this.existingIds)) {
-      // No existingIds set so don't notify of any
+  renderNotification: function(model, index, array) {
+    if (this.notificationType === 'follower') {
+      this.renderFollowerNotification(model);
     } else {
-      var newIds = _.difference(models.pluck('id'), this.existingIds);
-      _.each(newIds, this.notifyOfFollower);
+      console.log('this.notificationType', this.notificationType);
     }
-    localStorage.setItem('followerIds', models.pluck('id'));
-    this.existingIds = models.pluck('id');
   },
-  notifyOfFollower: function(id) {
-    var model = this.get(id)
+  renderFollowerNotification: function(id) {
+    var model = this.get(id);
     var notification = new TextNotificationView({
       title: 'Followed by @' + model.get('username') + ' on ADN',
       body: model.get('description') ? model.get('description').text : '',
       image: model.get('avatar_image').url,
       url: config.get('baseUrl') + '/' + model.get('username'),
-      type: 'Follower'
+      type: 'follower'
     });
     notification.render();
+  },
+  filterNewFollowers: function() {
+    var ids = this.pluck('id');
+    if (_.isEmpty(this.existingIds)) {
+      // No existingIds set so don't notify of any
+    } else {
+      var newIds = _.difference(ids, this.existingIds);
+      _.each(newIds, this.renderFollowerNotification);
+    }
+    localStorage.setItem(this.configName + '_ids', ids);
+    this.existingIds = ids;
   }
 });
 
