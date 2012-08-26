@@ -1,4 +1,19 @@
-window.Config = Backbone.Model.extend({ });
+window.Config = Backbone.Model.extend({
+  initialize: function() {
+    _.bindAll(this);
+    window.setInterval(this.saveRateLimit, 1 * 1000);
+  },
+  saveRateLimit: function() {
+    if (this.get('currentRateLimit')) {
+      var rateLimitHistory = this.get('rateLimitHistory');
+      rateLimitHistory.unshift(this.get('currentRateLimit'));
+      rateLimitHistory = rateLimitHistory.splice(0, 1000);
+      this.set({ 'rateLimitHistory': rateLimitHistory });
+      this.unset('currentRateLimit');
+    }
+    return this;
+  }
+});
 
 window.Account = Backbone.Model.extend({
   initialize: function() {
@@ -319,14 +334,14 @@ function trackRateLimit(jqXHR, settings) {
     return;
   }
   var remaining = jqXHR.getResponseHeader('X-RateLimit-Remaining');
-  _gaq.push(['_trackEvent', 'RateLimit', 'Track', 'Rate limit remaining', remaining]);
-  return;
   if (remaining) {
-    RateLimit.push({
-      // TODO: clean up timestamp hack
-      timestamp: parseInt((new Date()).getTime().toString().substring(0,10)),
-      remaining: parseInt(remaining)
-    })
+    config.set({
+      'currentRateLimit': {
+        timestamp: (new Date()).getTime(),
+        remaining: parseInt(remaining)
+      }
+    });
+    _gaq.push(['_trackEvent', 'RateLimit', 'Track', 'Rate limit remaining', remaining]);
   }
 }
 $.ajaxSetup({

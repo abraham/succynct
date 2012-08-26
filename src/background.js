@@ -14,10 +14,7 @@ _gaq.push(['_trackPageview']);
 /**
 * Create objects
 */
-// TODO: move ratelimit to config
-window.RateLimit = [];
 window.account = new window.Account();
-// window.mentions = new window.Stream({ url: 'https://alpha-api.app.net/stream/0/users/me/mentions' });
 window.mentions = new Posts({
   url: 'https://alpha-api.app.net/stream/0/users/me/mentions',
   configName: 'mentionNotifications',

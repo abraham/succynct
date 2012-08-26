@@ -13,4 +13,5 @@ window.config = new Config({
   followerNotifications: true,
   defaultFollowerFrequency: 15 * 60 * 1000,
   autoDismissNotifications: false,
+  rateLimitHistory: []
 });
