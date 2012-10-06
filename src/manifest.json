@@ -22,7 +22,8 @@
     "https://*.app.com/*",
     "notifications",
     "tabs",
-    "<all_urls>"
+    "<all_urls>",
+    "storage"
   ],
   "omnibox": { "keyword" : "adn" },
   "web_accessible_resources": [
