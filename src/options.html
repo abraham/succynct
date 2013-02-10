@@ -4,13 +4,41 @@
     <meta charset="utf-8">
     <title>Succynct options</title>
     <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+
     <style>
+      html,
       body {
-        padding-top: 60px;
+        height: 100%;
       }
-      
+      header {
+        padding-top: 60px;
+        padding-bottom: 60px;
+      }
+      footer {
+        height: 60px;
+        background-color: #f5f5f5;
+        margin-left: -20px;
+        margin-right: -20px;
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+      .hidden {
+        display:none;
+      }
+      #wrap {
+        min-height: 100%;
+        height: auto !important;
+        height: 100%;
+        margin: 0 auto -60px;
+      }
+      .container .credit {
+        margin: 20px 0;
+      }
+
+
       /* Graph classes */
-      path {
+/*      path {
         stroke: steelblue;
         stroke-width: 1;
         fill: none;
@@ -35,9 +63,10 @@
       .y.axis line, .y.axis path {
         fill: none;
         stroke: #000;
-      }
+      }*/
     </style>
-    
+
+
     <script src="/libs/jquery-min.js"></script>
     <script src="/libs/underscore-min.js"></script>
     <script src="/libs/backbone-min.js"></script>
@@ -46,107 +75,122 @@
     <script src="/js/config.js"></script>
     <script src="/js/options.js"></script>
   </head>
-  
+
+
   <body>
-    <div class="container">
-      
-      <header>
-        <h1>Succynct</h1>
-        <p>Minimalist App.net client for Google Chrome.</p>
-      </header>
-      
-      <br>
-      
-      <div id="content">
-        <div class="row">
-          <div class="span8">
-            <h3>Options</h3>
-            <div class="form-horizontal">
-              <!-- account -->
-              <div class="control-group">
-                <label class="control-label" for="account-btn">Account</label>
-                <div class="controls" id='account'>
-                  <button class="btn start-auth" id="account-btn">Authenticate App.net account</button>
+    <div id="wrap">
+      <div class="container">
+
+
+        <header>
+          <h1>Succynct <small>Minimalist App.net client for Google Chrome</small></h1>
+        </header>
+
+
+        <div id="content">
+          <div class="row hidden offset3" id="auth-flow">
+            <a target="_blank" class="btn start-auth" id="account-btn"><i class="icon-chevron-down"></i> Connect App.net account</a>
+          </div>
+
+
+          <div class="row offset4" id="loader">
+            <img src="/img/loader.gif" />
+          </div>
+
+
+          <div class="row hidden" id='options'>
+            <div class="span8">
+              <h3>Options</h3>
+              <div class="form-horizontal">
+                <!-- account -->
+                <div class="control-group">
+                  <label class="control-label" for="account-btn">Account</label>
+                  <div class="controls" id='account'>
+                    <button class="btn start-auth" id="account-btn">Authenticate App.net account</button>
+                  </div>
                 </div>
-              </div>
-              <!-- mentions -->
-              <div class="control-group" data-option-name='mentionNotifications'>
-                <label class="control-label" for="mention-notifications">Mention notifications</label>
-                <div class="controls">
-                  <label class="checkbox">
-                    <input type="checkbox" id="mention-notifications">
-                    Notify of new posts mentioning you
-                  </label>
+                <!-- mentions -->
+                <div class="control-group" data-option-name='mentionNotifications'>
+                  <label class="control-label" for="mention-notifications">Mention notifications</label>
+                  <div class="controls">
+                    <label class="checkbox">
+                      <input type="checkbox" id="mention-notifications">
+                      Notify of new posts mentioning you
+                    </label>
+                  </div>
                 </div>
-              </div>
-              <div class="control-group" data-option-name='mentionFrequency' data-option-default='defaultMentionFrequency' data-format="seconds">
-                <label class="control-label" for="mention-frequency">Mention frequency</label>
-                <div class="controls">
-                  <label class="textbox">
-                    Every <input type="number" class="input-mini" id="mention-frequency" min="5" max="900" required> seconds
-                    <span class='help-block'>How often do you want to be notified of new mentions?</span>
-                  </label>
+                <div class="control-group" data-option-name='mentionFrequency' data-option-default='defaultMentionFrequency' data-format="seconds">
+                  <label class="control-label" for="mention-frequency">Mention frequency</label>
+                  <div class="controls">
+                    <label class="textbox">
+                      Every <input type="number" class="input-mini" id="mention-frequency" min="5" max="900" required> seconds
+                      <span class='help-block'>How often do you want to be notified of new mentions?</span>
+                    </label>
+                  </div>
                 </div>
-              </div>
-              <!-- followers -->
-              <div class="control-group" data-option-name='followerNotifications'>
-                <label class="control-label" for="follower-notifications">Follower notifications</label>
-                <div class="controls">
-                  <label class="checkbox">
-                    <input type="checkbox" id="follower-notifications">
-                    Notify of new followers
-                  </label>
+                <!-- followers -->
+                <div class="control-group" data-option-name='followerNotifications'>
+                  <label class="control-label" for="follower-notifications">Follower notifications</label>
+                  <div class="controls">
+                    <label class="checkbox">
+                      <input type="checkbox" id="follower-notifications">
+                      Notify of new followers
+                    </label>
+                  </div>
                 </div>
-              </div>
-              <div class="control-group" data-option-name='followerFrequnecy' data-option-default='defaultFollowerFrequency' data-format="minutes">
-                <label class="control-label" for="follower-frequency">Follower frequency</label>
-                <div class="controls">
-                  <label class="textbox">
-                    Every <input type="number" class="input-mini" id="follower-frequency" min="1" max="60" required> minutes
-                    <span class='help-block'>How often do you want to be notified of new followers?</span>
-                  </label>
+                <div class="control-group" data-option-name='followerFrequnecy' data-option-default='defaultFollowerFrequency' data-format="minutes">
+                  <label class="control-label" for="follower-frequency">Follower frequency</label>
+                  <div class="controls">
+                    <label class="textbox">
+                      Every <input type="number" class="input-mini" id="follower-frequency" min="1" max="60" required> minutes
+                      <span class='help-block'>How often do you want to be notified of new followers?</span>
+                    </label>
+                  </div>
                 </div>
-              </div>
-              <!-- dismiss -->
-              <div class="control-group" data-option-name='autoDismissNotifications'>
-                <label class="control-label" for="auto-dismiss-notifications">Auto-dismiss</label>
-                <div class="controls">
-                  <label class="checkbox">
-                    <input type="checkbox" id="auto-dismiss-notifications">
-                    Automatically dismiss notifications if you have recently been active
-                  </label>
+                <!-- dismiss -->
+                <div class="control-group" data-option-name='autoDismissNotifications'>
+                  <label class="control-label" for="auto-dismiss-notifications">Auto-dismiss</label>
+                  <div class="controls">
+                    <label class="checkbox">
+                      <input type="checkbox" id="auto-dismiss-notifications">
+                      Automatically dismiss notifications if you have recently been active
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          
-          <div class="span4">
-            <h3>Features</h3>
-            <ul>
-              <li>Mention notifications</li>
-              <li>Follower notifications</li>
-              <li>Post from the omnibox by typing <i>"adn" &lt;tab&gt; "msg" &lt;enter&gt;</i></li>
-              <li>Share other people's posts</li>
-              <li>Post to ADN buttons on Twitter share intents</li>
-              <li>View profiles from the omnibox</li>
-              <li>Search #hashtags from the omnibox</li>
-            </ul>
+
+
+            <div class="span4">
+              <h2>Features</h2>
+              <ul>
+                <li>Mention notifications</li>
+                <li>Follower notifications</li>
+                <li>Post from the omnibox by typing <i>"adn" &lt;tab&gt; "msg" &lt;enter&gt;</i></li>
+                <li>Share other people's posts</li>
+                <li>Post to ADN buttons on Twitter share intents</li>
+                <li>View profiles from the omnibox</li>
+                <li>Search #hashtags from the omnibox</li>
+              </ul>
+            </div>
           </div>
         </div>
-        <!-- <div class='row'>
-          <h3>Rate limit history</h3>
-          <span class='help-block'>Each ADN account is limited to 5000 requests an hour. If you go beyond that notifications will stop working. The rate limit for up to the last 1024 minutes is shown.</span>
-          <div id='graph'>
-        </div> -->
+
+
       </div>
-      
-      <footer>
-        <a href="https://alpha.app.net/abraham">@abraham</a> - 
-        <a href="http://abrah.am">Abraham Williams</a> - 
-        <a href="https://github.com/abraham/succynct">Source</a> - 
-        <a href="https://app.net">App.net</a>
-      </footer>
-      
+      <div id="push"></div>
     </div>
+
+
+    <footer>
+      <div class="container">
+        <p class="muted credit">
+          Built by <a href="https://alpha.app.net/abraham">@abraham</a> to help make <a href="https://app.net">App.net</a> awesome.
+          Check out the <a href="https://chrome.google.com/webstore/detail/hngjfhijhmcechdkbgopbgghajokogdi">Chrome Web Store page</a> and the <a href="https://github.com/abraham/succynct">Source code</a>.
+        </p>
+      </div>
+    </footer>
+
+
   </body>
 </html>
