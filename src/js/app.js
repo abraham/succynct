@@ -1,22 +1,5 @@
-window.Config = Backbone.Model.extend({
-  initialize: function() {
-    _.bindAll(this);
-  },
-  saveRateLimit: function() {
-    if (this.get('currentRateLimit')) {
-      var rateLimitHistory = this.get('rateLimitHistory');
-      rateLimitHistory.unshift(this.get('currentRateLimit'));
-      rateLimitHistory = rateLimitHistory.splice(0, 1024);
-      this.set({ 'rateLimitHistory': rateLimitHistory });
-      this.unset('currentRateLimit');
-    }
-    return this;
-  },
-  setInterval: function() {
-    window.setInterval(this.saveRateLimit, 1 * 60 * 1000);
-    return this;
-  }
-});
+console.log('app.js');
+
 
 window.Account = Backbone.Model.extend({
   initialize: function() {
@@ -34,6 +17,7 @@ window.Account = Backbone.Model.extend({
       + '&scope=' + config.get('apiScope');
   }
 });
+
 
 window.OmniboxView = Backbone.View.extend({
   initialize: function() {
