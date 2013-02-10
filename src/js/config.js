@@ -60,6 +60,7 @@ window.Config = Backbone.Model.extend({
   getFromChromeCallback: function(items){
     console.log('config.getFromChromeCallback', items);
     this.set(items['config']);
+    this.trigger('ready');
   },
 
 
