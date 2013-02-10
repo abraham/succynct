@@ -21,24 +21,17 @@ window.Config = Backbone.Model.extend({
 window.Account = Backbone.Model.extend({
   initialize: function() {
     _.bindAll(this);
-    if (this.get('accessToken')) {
-      this.fetch();
-    }
   },
-  url: function() {
-    return 'https://alpha-api.app.net/stream/0/users/me';
-  },
-  checkAuth: function() {
-    if (!this.get('accessToken') && localStorage.getItem('accessToken')) {
-      this.set({ accessToken: localStorage.getItem('accessToken') });
-      this.fetch();
-    }
+  url: 'https://alpha-api.app.net/stream/0/users/me',
+  parse: function(response) {
+    return _.extend(this.attributes, response);
   },
   buildAuthUrl: function() {
     return config.get('authorizeUrl')
-     + '?client_id=' + config.get('clientId')
-     + '&response_type=token&redirect_uri=' + chrome.extension.getURL('/options.html')
-     + '&scope=' + config.get('apiScope');
+      + '?client_id=' + config.get('clientId')
+      + '&response_type=token'
+      + '&redirect_uri=' + chrome.extension.getURL('/options.html')
+      + '&scope=' + config.get('apiScope');
   }
 });
 
