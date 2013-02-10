@@ -13,7 +13,7 @@
     "default_title": "Number of available characters"
   },
   "background": {
-    "scripts": [ "js/jquery-1.8.0.min.js", "js/underscore-min.js", "js/backbone-min.js", "app.js", "config.js", "background.js" ]
+    "scripts": [ "libs/jquery-1.8.0.min.js", "libs/underscore-min.js", "libs/backbone-min.js", "js/app.js", "js/config.js", "js/background.js" ]
   },
   "minimum_chrome_version": "23",
   "options_page": "options.html",
@@ -31,8 +31,8 @@
   "content_scripts": [
     {
       "matches": [ "*://twitter.com/intent/tweet*" ],
-      "css": [ "content_twitter.css" ],
-      "js": [ "js/jquery-1.8.0.min.js", "content_twitter.js" ]
+      "css": [ "css/content_twitter.css" ],
+      "js": [ "libs/jquery-1.8.0.min.js", "js/content_twitter.js" ]
     }
   ],
   "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'"
