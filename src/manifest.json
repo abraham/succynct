@@ -13,7 +13,15 @@
     "default_title": "Number of available characters"
   },
   "background": {
-    "scripts": [ "libs/jquery-min.js", "libs/underscore-min.js", "libs/backbone-min.js", "js/app.js", "js/config.js", "js/background.js" ]
+    "scripts": [
+      "libs/jquery-min.js",
+      "libs/underscore-min.js",
+      "libs/backbone-min.js",
+      "js/app.js",
+      "js/config.js",
+      "js/analytics.js",
+      "js/background.js"
+    ]
   },
   "minimum_chrome_version": "23",
   "options_page": "options.html",
