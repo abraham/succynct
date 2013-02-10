@@ -1,8 +1,8 @@
 {
-  "name": "__MSG_extName__",
+  "name": "Succynct",
   "version": "2012.8.18",
   "manifest_version": 2,
-  "description": "__MSG_extDescription__",
+  "description": "A minimalist App.net Client",
   "icons": {
     "16": "img/angle.png",
     "48": "img/angle.png",
@@ -10,9 +10,8 @@
   },
   "page_action": {
     "default_icon": "img/angle.png",
-    "default_title": "__MSG_availableCharacters__"
+    "default_title": "Number of available characters"
   },
-  "default_locale": "en",
   "background": {
     "scripts": [ "js/jquery-1.8.0.min.js", "js/underscore-min.js", "js/backbone-min.js", "app.js", "config.js", "background.js" ]
   },
