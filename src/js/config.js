@@ -1,5 +1,9 @@
 /**
  * Handle config and automatically sync to other Chrome profiles
+ *
+ * Listens for changes to chrome.storage.sync coming from other envirements/computers,
+ * overrides the changes with the blacklist. Automatically saves changes to chrome.storage.sync
+ * after being overridden with the blacklist.
  */
 window.Config = Backbone.Model.extend({
   /**
@@ -82,11 +86,13 @@ window.Config = Backbone.Model.extend({
 
   /**
    * Set changes of config model to chrome.storage.sync
+   *
+   * Trigger at most once every five seconds
    */
-  setModelChangesToChrome: function(model, options) {
+   setModelChangesToChrome: _.debounce(function(model, options) {
     console.log('config.setModelChangesToChrome', model, options);
     chrome.storage.sync.set({'config': this.attributes});
-  },
+  }, 5000),
 });
 
 
