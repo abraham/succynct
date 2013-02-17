@@ -6,6 +6,8 @@
  * after being overridden with the blacklist.
  */
 window.Config = Backbone.Model.extend({
+
+
   /**
    * Blacklist of values that should never be user changeable
    */
@@ -32,11 +34,16 @@ window.Config = Backbone.Model.extend({
 
 
   initialize: function() {
+    // Set up `this` to work in every method
     _.bindAll(this);
+    // When the model changes override blacklist values
     this.on('change', this.override);
     this.override();
+    // Listen for changes to chrome.storage and propigate to model
     chrome.storage.onChanged.addListener(this.setChomeChangesToModel);
+    // Get current values from chrome.storage
     this.getFromChrome();
+    // On change save new values to chrome.storage
     this.on('change', this.setModelChangesToChrome);
   },
 
