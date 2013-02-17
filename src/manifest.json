@@ -19,6 +19,7 @@
       "libs/backbone-min.js",
       "js/app.js",
       "js/config.js",
+      "js/accounts.js",
       "js/analytics.js",
       "js/background.js"
     ]
