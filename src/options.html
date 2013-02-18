@@ -67,15 +67,6 @@
     </style>
 
 
-    <script src="/libs/jquery-min.js"></script>
-    <script src="/libs/underscore-min.js"></script>
-    <script src="/libs/backbone-min.js"></script>
-    <script src="/libs/bootstrap.min.js"></script>
-    <script src="/js/app.js"></script>
-    <script src="/js/accounts.js"></script>
-    <script src="/js/config.js"></script>
-    <script src="/js/analytics.js"></script>
-    <script src="/js/options.js"></script>
   </head>
 
 
@@ -90,9 +81,6 @@
 
 
         <div id="content">
-          <div class="row hidden offset3" id="auth-flow">
-            <a target="_blank" class="btn start-auth" id="account-btn"><i class="icon-chevron-down"></i> Connect App.net account</a>
-          </div>
 
 
           <div class="row offset4" id="loader">
@@ -100,82 +88,95 @@
           </div>
 
 
+          <div class="row hidden" id="accounts">
+            <h3>Accounts <small>Add or remove accounts</small></h3>
+
+
+            <div class="row hidden offset2" id="accounts-add">
+              <a target="_blank" class="btn start-auth" id="account-btn"><i class="icon-user"></i> Connect App.net account</a>
+            </div>
+
+
+            <div class="row hidden offset3" id="accounts-list">
+              List of accounts
+            </div>
+          </div>
+
+
+          <br>
+
+
           <div class="row hidden" id='options'>
-            <div class="span8">
-              <h3>Options</h3>
-              <div class="form-horizontal">
-                <!-- account -->
-                <div class="control-group">
-                  <label class="control-label" for="account-btn">Account</label>
-                  <div class="controls" id='account'>
-                    <button class="btn start-auth" id="account-btn">Authenticate App.net account</button>
-                  </div>
+            <h3>Options <small>The finer things in life</small></h3>
+            <div class="form-horizontal">
+              <!-- mentions -->
+              <div class="control-group" data-option-name='mentionNotifications'>
+                <label class="control-label" for="mention-notifications">Mention notifications</label>
+                <div class="controls">
+                  <label class="checkbox">
+                    <input type="checkbox" id="mention-notifications">
+                    Notify of new posts mentioning you
+                  </label>
                 </div>
-                <!-- mentions -->
-                <div class="control-group" data-option-name='mentionNotifications'>
-                  <label class="control-label" for="mention-notifications">Mention notifications</label>
-                  <div class="controls">
-                    <label class="checkbox">
-                      <input type="checkbox" id="mention-notifications">
-                      Notify of new posts mentioning you
-                    </label>
-                  </div>
+              </div>
+              <div class="control-group" data-option-name='mentionFrequency' data-option-default='defaultMentionFrequency' data-format="seconds">
+                <label class="control-label" for="mention-frequency">Mention frequency</label>
+                <div class="controls">
+                  <label class="textbox">
+                    Every <input type="number" class="input-mini" id="mention-frequency" min="5" max="900" required> seconds
+                    <span class='help-block'>How often do you want to be notified of new mentions?</span>
+                  </label>
                 </div>
-                <div class="control-group" data-option-name='mentionFrequency' data-option-default='defaultMentionFrequency' data-format="seconds">
-                  <label class="control-label" for="mention-frequency">Mention frequency</label>
-                  <div class="controls">
-                    <label class="textbox">
-                      Every <input type="number" class="input-mini" id="mention-frequency" min="5" max="900" required> seconds
-                      <span class='help-block'>How often do you want to be notified of new mentions?</span>
-                    </label>
-                  </div>
+              </div>
+              <!-- followers -->
+              <div class="control-group" data-option-name='followerNotifications'>
+                <label class="control-label" for="follower-notifications">Follower notifications</label>
+                <div class="controls">
+                  <label class="checkbox">
+                    <input type="checkbox" id="follower-notifications">
+                    Notify of new followers
+                  </label>
                 </div>
-                <!-- followers -->
-                <div class="control-group" data-option-name='followerNotifications'>
-                  <label class="control-label" for="follower-notifications">Follower notifications</label>
-                  <div class="controls">
-                    <label class="checkbox">
-                      <input type="checkbox" id="follower-notifications">
-                      Notify of new followers
-                    </label>
-                  </div>
+              </div>
+              <div class="control-group" data-option-name='followerFrequnecy' data-option-default='defaultFollowerFrequency' data-format="minutes">
+                <label class="control-label" for="follower-frequency">Follower frequency</label>
+                <div class="controls">
+                  <label class="textbox">
+                    Every <input type="number" class="input-mini" id="follower-frequency" min="1" max="60" required> minutes
+                    <span class='help-block'>How often do you want to be notified of new followers?</span>
+                  </label>
                 </div>
-                <div class="control-group" data-option-name='followerFrequnecy' data-option-default='defaultFollowerFrequency' data-format="minutes">
-                  <label class="control-label" for="follower-frequency">Follower frequency</label>
-                  <div class="controls">
-                    <label class="textbox">
-                      Every <input type="number" class="input-mini" id="follower-frequency" min="1" max="60" required> minutes
-                      <span class='help-block'>How often do you want to be notified of new followers?</span>
-                    </label>
-                  </div>
-                </div>
-                <!-- dismiss -->
-                <div class="control-group" data-option-name='autoDismissNotifications'>
-                  <label class="control-label" for="auto-dismiss-notifications">Auto-dismiss</label>
-                  <div class="controls">
-                    <label class="checkbox">
-                      <input type="checkbox" id="auto-dismiss-notifications">
-                      Automatically dismiss notifications if you have recently been active
-                    </label>
-                  </div>
+              </div>
+              <!-- dismiss -->
+              <div class="control-group" data-option-name='autoDismissNotifications'>
+                <label class="control-label" for="auto-dismiss-notifications">Auto-dismiss</label>
+                <div class="controls">
+                  <label class="checkbox">
+                    <input type="checkbox" id="auto-dismiss-notifications">
+                    Automatically dismiss notifications if you have recently been active
+                  </label>
                 </div>
               </div>
             </div>
 
 
-            <div class="span4">
-              <h2>Features</h2>
-              <ul>
-                <li>Mention notifications</li>
-                <li>Follower notifications</li>
-                <li>Post from the omnibox by typing <i>"adn" &lt;tab&gt; "msg" &lt;enter&gt;</i></li>
-                <li>Share other people's posts</li>
-                <li>Post to ADN buttons on Twitter share intents</li>
-                <li>View profiles from the omnibox</li>
-                <li>Search #hashtags from the omnibox</li>
-              </ul>
-            </div>
           </div>
+
+
+          <div class="row" id="features">
+            <h2>Features</h2>
+            <ul>
+              <li>Mention notifications</li>
+              <li>Follower notifications</li>
+              <li>Post from the omnibox by typing <i>"adn" &lt;tab&gt; "msg" &lt;enter&gt;</i></li>
+              <li>Share other people's posts</li>
+              <li>Post to ADN buttons on Twitter share intents</li>
+              <li>View profiles from the omnibox</li>
+              <li>Search #hashtags from the omnibox</li>
+            </ul>
+          </div>
+
+
         </div>
 
 
@@ -192,6 +193,18 @@
         </p>
       </div>
     </footer>
+
+
+    <script src="/libs/jquery-min.js"></script>
+    <script src="/libs/underscore-min.js"></script>
+    <script src="/libs/backbone-min.js"></script>
+    <script src="/libs/bootstrap.min.js"></script>
+    <script src="/js/app.js"></script>
+    <script src="/js/accounts.js"></script>
+    <script src="/js/config.js"></script>
+    <script src="/js/analytics.js"></script>
+    <script src="/js/views/options.js"></script>
+    <script src="/js/options.js"></script>
 
 
   </body>
