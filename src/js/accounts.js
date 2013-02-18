@@ -7,10 +7,17 @@ console.log('accounts.js');
 window.Account = Backbone.Model.extend({
 
 
+  url: 'https://alpha-api.app.net/stream/0/users/me',
+
+
   initialize: function() {
     // _.bindAll(this);
   },
 
+
+  parse: function(response) {
+    return response.data;
+  }
 
 });
 
@@ -20,10 +27,13 @@ window.Account = Backbone.Model.extend({
 window.Accounts = Backbone.Collection.extend({
 
 
+  /**
+   * Convenience to know if chrome.storage values have been retrieved yet
+   */
+  ready: false,
+
+
   model: Account,
-
-
-  url: 'https://alpha-api.app.net/stream/0/users/me',
 
 
   initialize: function() {
@@ -56,6 +66,7 @@ window.Accounts = Backbone.Collection.extend({
     if (items['accounts']){
       this.reset(items['accounts']);
     }
+    this.ready = true;
     this.trigger('ready');
     return this;
   },
@@ -89,3 +100,5 @@ window.Accounts = Backbone.Collection.extend({
 
 
 });
+
+window.accounts = new Accounts();
