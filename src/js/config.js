@@ -9,16 +9,23 @@ window.Config = Backbone.Model.extend({
 
 
   /**
+   * Convenience to know if chrome.storage values have been retrieved yet
+   */
+  ready: false,
+
+
+  /**
    * Blacklist of values that should never be user changeable
    */
   blacklist: {
-    clientId: 'UnSbSEb6EFHUZt3ygTwPSTdcdGd8Lvey',
+    clientId: 'Yfqy8sQ6DthWrqnpAyrK9aqSAR7gDcJd', // Succynct
     googleAnalyticsAccount: 'UA-2706568-45',
-    authorizeUrl: 'https://account.app.net/oauth/authenticate',
+    authorizeBaseUrl: 'https://account.app.net/oauth/authorize',
+    authenticateBaseUrl: 'https://account.app.net/oauth/authenticate',
     accessTokenUrl: 'https://account.app.net/oauth/access_token',
     apiBaseUrl: 'https://alpha-api.app.net',
     baseUrl: 'https://alpha.app.net',
-    apiScope: 'stream,write_post,follow,messages',
+    apiScope: 'basic,stream,email,write_post,follow,public_messages,messages',
   },
 
 
@@ -71,6 +78,7 @@ window.Config = Backbone.Model.extend({
   getFromChromeCallback: function(items){
     console.log('config.getFromChromeCallback', items);
     this.set(items['config']);
+    this.ready = true;
     this.trigger('ready');
   },
 
