@@ -105,7 +105,7 @@ window.Config = Backbone.Model.extend({
    * Trigger at most once every five seconds
    */
    setModelChangesToChrome: _.debounce(function(model, options) {
-    console.log('config.setModelChangesToChrome', model, options);
+    console.log('config.setModelChangesToChrome:set', model, options);
     chrome.storage.sync.set({'config': this.attributes});
   }, 5000),
 });
