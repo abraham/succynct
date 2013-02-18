@@ -1,24 +1,6 @@
 console.log('app.js');
 
 
-window.Account = Backbone.Model.extend({
-  initialize: function() {
-    _.bindAll(this);
-  },
-  url: 'https://alpha-api.app.net/stream/0/users/me',
-  parse: function(response) {
-    return _.extend(this.attributes, response);
-  },
-  buildAuthUrl: function() {
-    return config.get('authorizeUrl')
-      + '?client_id=' + config.get('clientId')
-      + '&response_type=token'
-      + '&redirect_uri=' + chrome.extension.getURL('/options.html')
-      + '&scope=' + config.get('apiScope');
-  }
-});
-
-
 window.OmniboxView = Backbone.View.extend({
   initialize: function() {
     _.bindAll(this);
@@ -245,86 +227,4 @@ var Posts = Polling.extend({
     }
     _.each(models, this.renderNotification);
   }
-});
-
-var Accounts = Polling.extend({
-  model: Account,
-  initialize: function(options) {
-    _.bindAll(this);
-    _.extend(this, options);
-    var ids = localStorage.getItem(this.configName + '_ids');
-    if (ids === null || ids.length === 0) {
-      this.existingIds = [];
-    } else {
-      this.existingIds = ids.split(',');
-    }
-  },
-  renderNotification: function(model, index, array) {
-    if (this.notificationType === 'follower') {
-      this.renderFollowerNotification(model);
-    } else {
-      console.log('this.notificationType', this.notificationType);
-    }
-  },
-  renderFollowerNotification: function(id) {
-    var model = this.get(id);
-    var notification = new TextNotificationView({
-      title: 'Followed by @' + model.get('username') + ' on ADN',
-      body: model.get('description') ? model.get('description').text : '',
-      image: model.get('avatar_image').url,
-      url: config.get('baseUrl') + '/' + model.get('username'),
-      type: 'follower'
-    });
-    notification.render();
-  },
-  filterNewFollowers: function() {
-    var ids = this.pluck('id');
-    if (_.isEmpty(this.existingIds)) {
-      // No existingIds set so don't notify of any
-    } else {
-      var newIds = _.difference(ids, this.existingIds);
-      _.each(newIds, this.renderFollowerNotification);
-    }
-    localStorage.setItem(this.configName + '_ids', ids);
-    this.existingIds = ids;
-  }
-});
-
-/**
-  * Add auth headers
-  */
-function attacheAuthHeader(xhr, settings) {
-  if (!navigator.onLine) {
-    return false;
-  }
-  // Opt-in to new API features
-  // if (settings.url.indexOf('https://alpha-api.app.net/') === 0) {
-  //   xhr.setRequestHeader('X-ADN-Migration-Overrides', 'response_envelope=0');
-  // }
-  if (!window.account || !window.account.get('accessToken')) {
-    return;
-  }
-  if (settings.url.indexOf('https://alpha-api.app.net/') === 0) {
-    xhr.setRequestHeader('Authorization', 'Bearer ' + window.account.get('accessToken'));
-  }
-  _gaq.push(['_trackPageview']);
-}
-function trackRateLimit(jqXHR, settings) {
-  if (config.get('environment') !== 'background') {
-    return;
-  }
-  var remaining = jqXHR.getResponseHeader('X-RateLimit-Remaining');
-  if (remaining) {
-    config.set({
-      'currentRateLimit': {
-        timestamp: (new Date()).getTime(),
-        remaining: parseInt(remaining)
-      }
-    });
-    _gaq.push(['_trackEvent', 'RateLimit', 'Track', 'Rate limit remaining', remaining]);
-  }
-}
-$.ajaxSetup({
-  beforeSend: attacheAuthHeader,
-  complete: trackRateLimit
 });
