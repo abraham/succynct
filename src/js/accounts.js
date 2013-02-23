@@ -96,7 +96,7 @@ window.Accounts = Backbone.Collection.extend({
    setCollectionChangesToChrome: _.debounce(function(model, collection, options) {
     console.log('accounts.setCollectionChangesToChrome', model, collection, options);
     chrome.storage.sync.set({'accounts': this.toJSON()});
-  }, 5000),
+  }, 2000),
 
 
 });
