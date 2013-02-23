@@ -6,7 +6,7 @@ var OptionsView = Backbone.View.extend({
     var html = '<li>';
     html += '<strong>' + account.username + '</strong> ';
     html += '<a href="https://alpha.app.net/' + account.username + '" target="_blank">' + account.name + '</a> ';
-    html += '<button class="btn btn-mini btn-danger" type="button">Remove</button>';
+    html += '<button class="accounts-remove btn btn-mini btn-danger" type="button" data-action="remove" data-id="' + account.id + '">Remove</button>';
     // html += '<p>' + account.description.text + '</p>';
     return html + '</li>';
   },
@@ -14,8 +14,7 @@ var OptionsView = Backbone.View.extend({
 
   events: {
     "click .start-auth": "setAuthenticateHref",
-    // "click .button.edit":   "openEditDialog",
-    // "click .button.delete": "destroy"
+    "click button.accounts-remove": 'removeAccount',
   },
 
 
@@ -48,6 +47,7 @@ var OptionsView = Backbone.View.extend({
         html = '',
         accounts = that.collection.toJSON();
     that.$('#accounts').fadeIn();
+    that.$('#accounts-list').empty().fadeOut();
     if (accounts.length === 0) {
       that.$('#accounts-add').fadeIn();
       return this;
@@ -58,6 +58,14 @@ var OptionsView = Backbone.View.extend({
     html += '<br><br><li class="muted" colspan="3">Support for multiple accounts coming soon</li>';
     that.$('#accounts-list').fadeIn();
     that.$('#accounts-list').html('<ul class="unstyled">' + html + '</ul>');
+    return this;
+  },
+
+
+  removeAccount: function(event) {
+    var id = $(event.currentTarget).data('id');
+    this.collection.remove(id);
+    this.renderAccounts();
     return this;
   },
 
@@ -81,7 +89,7 @@ var OptionsView = Backbone.View.extend({
     // Redirects tend to cache weird for extension files so open and close tabs instead
     setTimeout(function() {
       window.close();
-    }, 500)
+    }, 50)
     
   },
 
