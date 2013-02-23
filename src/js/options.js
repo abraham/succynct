@@ -1,5 +1,6 @@
 console.log('options.js');
 
+
 /**
  * Create an optionsview and bind it to the dom with the config and accounts
  */
