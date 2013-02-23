@@ -109,57 +109,47 @@
           <div class="row hidden" id='options'>
             <h3>Options <small>The finer things in life</small></h3>
             <div class="form-horizontal">
-              <!-- mentions -->
-              <div class="control-group" data-option-name='mentionNotifications'>
-                <label class="control-label" for="mention-notifications">Mention notifications</label>
-                <div class="controls">
-                  <label class="checkbox">
-                    <input type="checkbox" id="mention-notifications">
-                    Notify of new posts mentioning you
-                  </label>
-                </div>
-              </div>
-              <div class="control-group" data-option-name='mentionFrequency' data-option-default='defaultMentionFrequency' data-format="seconds">
-                <label class="control-label" for="mention-frequency">Mention frequency</label>
+              <!-- frequency -->
+              <div class="control-group">
+                <!-- <label class="control-label" for="frequency">Frequency</label> -->
                 <div class="controls">
                   <label class="textbox">
-                    Every <input type="number" class="input-mini" id="mention-frequency" min="5" max="900" required> seconds
-                    <span class='help-block'>How often do you want to be notified of new mentions?</span>
+                    Check for new actions every <input value="15" type="number" class="span1" id="frequency" min="5" max="900" required> seconds
                   </label>
                 </div>
               </div>
-              <!-- followers -->
-              <div class="control-group" data-option-name='followerNotifications'>
-                <label class="control-label" for="follower-notifications">Follower notifications</label>
+
+
+              <!-- actions -->
+              <div class="control-group">
+                <!-- <label class="control-label" for="actions">Actions</label> -->
                 <div class="controls">
                   <label class="checkbox">
-                    <input type="checkbox" id="follower-notifications">
-                    Notify of new followers
+                    <input type="checkbox" id="actions-mentions" checked> Notify of posts mentioning me
+                  </label>
+                  <label class="checkbox">
+                    <input type="checkbox" id="actions-follow" checked> Notify of my new followers
+                  </label>
+                  <label class="checkbox">
+                    <input type="checkbox" id="actions-repost" checked> Notify of reposts of my content
+                  </label>
+                  <label class="checkbox">
+                    <input type="checkbox" id="events-star" checked> Notify of stars of my content
                   </label>
                 </div>
               </div>
-              <div class="control-group" data-option-name='followerFrequnecy' data-option-default='defaultFollowerFrequency' data-format="minutes">
-                <label class="control-label" for="follower-frequency">Follower frequency</label>
-                <div class="controls">
-                  <label class="textbox">
-                    Every <input type="number" class="input-mini" id="follower-frequency" min="1" max="60" required> minutes
-                    <span class='help-block'>How often do you want to be notified of new followers?</span>
-                  </label>
-                </div>
-              </div>
+
+
               <!-- dismiss -->
-              <div class="control-group" data-option-name='autoDismissNotifications'>
-                <label class="control-label" for="auto-dismiss-notifications">Auto-dismiss</label>
+              <div class="control-group">
+                <!-- <label class="control-label" for="auto-dismiss">Auto-dismiss</label> -->
                 <div class="controls">
                   <label class="checkbox">
-                    <input type="checkbox" id="auto-dismiss-notifications">
-                    Automatically dismiss notifications if you have recently been active
+                    <input type="checkbox" id="auto-dismiss"> Automatically hide notifications after <input value="10" type="number" class="span1" id="auto-dismiss-delay" min="5" max="60" required> seconds
                   </label>
                 </div>
               </div>
             </div>
-
-
           </div>
 
 
