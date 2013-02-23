@@ -37,7 +37,7 @@ window.Config = Backbone.Model.extend({
     autoDismissDelay: 10 * 1000,
     actions: true,
     autoDismiss: true,
-    actionsFollower: true,
+    actionsFollow: true,
     actionsStar: true,
     actionsRepost: true,
     actionsMention: true,

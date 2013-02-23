@@ -51,6 +51,13 @@ var OptionsView = Backbone.View.extend({
   renderOptions: function() {
     var that = this;
     that.$('#options').fadeIn();
+    $('input[type="checkbox"]').each(function(index, element) {
+      var $element = $(element);
+      var name = $element.data('name');
+      console.log(name, that.model.get(name));
+      $element.prop('checked', that.model.get(name));
+    });
+    
     return this;
   },
 
