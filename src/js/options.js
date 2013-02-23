@@ -11,7 +11,7 @@ optionsview = new OptionsView({
 
 
 /**
- * optionsview.ready will only execute once
+ * When both are readdy render the finished UI
  */
 config.on('ready', optionsview.ready);
 accounts.on('ready', optionsview.ready);
