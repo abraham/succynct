@@ -21,7 +21,7 @@ var OptionsView = Backbone.View.extend({
   events: {
     "click .start-auth": "setAuthenticateHref",
     "click button.accounts-remove": 'removeAccount',
-    'click input[type="checkbox"]': 'toggleCheckbox',
+    'click input[type="checkbox"]': 'setCheckbox',
   },
 
 
@@ -118,7 +118,12 @@ var OptionsView = Backbone.View.extend({
   },
 
 
-  toggleCheckbox: function(event) {
-    
+  /**
+   * Set checkbox value to config model
+   */
+  setCheckbox: function(event) {
+    var name = $(event.currentTarget).data('name');
+    var value = $(event.currentTarget).prop('checked');
+    this.model.set(name, value);
   },
 });
