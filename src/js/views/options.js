@@ -1,7 +1,13 @@
 console.log('views/options.js');
 
 
+/**
+ * Handle the UI for options.html
+ */
 var OptionsView = Backbone.View.extend({
+  /**
+   * Template for single account in list
+   */
   template: function(account) {
     var html = '<li>';
     html += '<strong>' + account.username + '</strong> ';
@@ -15,6 +21,7 @@ var OptionsView = Backbone.View.extend({
   events: {
     "click .start-auth": "setAuthenticateHref",
     "click button.accounts-remove": 'removeAccount',
+    'click input[type="checkbox"]': 'toggleCheckbox',
   },
 
 
@@ -25,6 +32,9 @@ var OptionsView = Backbone.View.extend({
   },
 
 
+  /**
+   * Start rendering both options and accounts
+   */
   render: function() {
     console.log('views/options.js:render');
     var that = this;
@@ -35,6 +45,9 @@ var OptionsView = Backbone.View.extend({
   },
 
 
+  /**
+   * Render configured options
+   */
   renderOptions: function() {
     var that = this;
     that.$('#options').fadeIn();
@@ -42,6 +55,9 @@ var OptionsView = Backbone.View.extend({
   },
 
 
+  /**
+   * Render list of accounts
+   */
   renderAccounts: function() {
     var that = this,
         html = '',
@@ -62,6 +78,9 @@ var OptionsView = Backbone.View.extend({
   },
 
 
+  /**
+   * Remove account from list and from collection
+   */
   removeAccount: function(event) {
     var id = $(event.currentTarget).data('id');
     this.collection.remove(id);
@@ -70,6 +89,9 @@ var OptionsView = Backbone.View.extend({
   },
 
 
+  /**
+   * Check to see if config and accounts data has been retrieved from chrome.storage
+   */
   ready: function() {
     console.log('views ready');
     if (config.ready && accounts.ready) {
@@ -78,6 +100,9 @@ var OptionsView = Backbone.View.extend({
   },
 
 
+  /**
+   * Set the href when a user clicks to add a new account
+   */
   setAuthenticateHref: function(event) {
     url = 'https://account.app.net/oauth/authenticate'
       + '?client_id=' + config.get('clientId')
@@ -90,8 +115,10 @@ var OptionsView = Backbone.View.extend({
     setTimeout(function() {
       window.close();
     }, 50)
-    
   },
 
 
+  toggleCheckbox: function(event) {
+    
+  },
 });
