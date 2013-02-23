@@ -33,7 +33,7 @@ function successCallback() {
   setTimeout(function() {
     window.open(chrome.extension.getURL('/options.html'));
     window.close();
-  }, 5500)
+  }, 2500)
 }
 
 
