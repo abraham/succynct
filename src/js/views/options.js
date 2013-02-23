@@ -2,6 +2,14 @@ console.log('views/options.js');
 
 
 var OptionsView = Backbone.View.extend({
+  template: function(account) {
+    var html = '<li>';
+    html += '<strong>' + account.username + '</strong> ';
+    html += '<a href="https://alpha.app.net/' + account.username + '" target="_blank">' + account.name + '</a> ';
+    html += '<button class="btn btn-mini btn-danger" type="button">Remove</button>';
+    // html += '<p>' + account.description.text + '</p>';
+    return html + '</li>';
+  },
 
 
   events: {
@@ -36,13 +44,20 @@ var OptionsView = Backbone.View.extend({
 
 
   renderAccounts: function() {
-    var that = this;
+    var that = this,
+        html = '',
+        accounts = that.collection.toJSON();
     that.$('#accounts').fadeIn();
-    if (that.collection.length === 0) {
+    if (accounts.length === 0) {
       that.$('#accounts-add').fadeIn();
       return this;
     }
+    for (index in accounts) {
+      html += that.template(accounts[index]);
+    }
+    html += '<br><br><li class="muted" colspan="3">Support for multiple accounts coming soon</li>';
     that.$('#accounts-list').fadeIn();
+    that.$('#accounts-list').html('<ul class="unstyled">' + html + '</ul>');
     return this;
   },
 
