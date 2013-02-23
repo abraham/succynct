@@ -6,7 +6,7 @@ optionsview = new OptionsView({
   collection: accounts,
 });
 
-}/**
+/**
  * optionsview.ready will only execute once
  */
 config.on('ready', optionsview.ready);
