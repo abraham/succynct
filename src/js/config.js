@@ -41,6 +41,7 @@ window.Config = Backbone.Model.extend({
     actionsStar: true,
     actionsRepost: true,
     actionsMention: true,
+    messages: false,
   },
 
 
