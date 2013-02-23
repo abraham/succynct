@@ -15,7 +15,7 @@ window.Config = Backbone.Model.extend({
 
 
   /**
-   * Blacklist of values that should never be user changeable
+   * Blacklist of values that are not user changeable
    */
   blacklist: {
     clientId: 'Yfqy8sQ6DthWrqnpAyrK9aqSAR7gDcJd', // Succynct
@@ -29,14 +29,16 @@ window.Config = Backbone.Model.extend({
   },
 
 
+  /**
+   * Default values that are user changeable
+   */
   defaults: {
-    apiRequestFrequency: 15 * 1000,
-    apiFollowersRequestFrequency: 15 * 60 * 1000,
-    mentionNotifications: true,
-    defaultMentionFrequency: 15 * 1000,
-    followerNotifications: true,
-    defaultFollowerFrequency: 15 * 60 * 1000,
-    autoDismissNotifications: false,
+    frequency: 15 * 1000,
+    dismisFrequency: 10 * 1000,
+    actionsFollower: true,
+    actionsStar: true,
+    actionsRepost: true,
+    actionsMention: true,
   },
 
 
