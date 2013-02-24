@@ -12,7 +12,12 @@ window.Config = Backbone.Model.extend({
    * Convenience to know if chrome.storage values have been retrieved yet
    */
   ready: false,
-
+  
+  
+  /**
+   * If true, context is the background
+   */
+  background: false,
 
   /**
    * Blacklist of values that are not user changeable

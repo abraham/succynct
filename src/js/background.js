@@ -1,6 +1,7 @@
 console.log('background.js');
 
 
+config.background = true;
 config.on('ready', function(){
   console.log('ready');
 })
