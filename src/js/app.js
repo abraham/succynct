@@ -27,6 +27,7 @@ var App = Backbone.View.extend({
     if (this.model.get('frequency', false)) {
       this.setInterval(this.model.get('frequency', false));
     }
+    interactions.checkForNew();
   },
 
 
