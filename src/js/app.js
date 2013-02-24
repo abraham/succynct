@@ -1,5 +1,66 @@
 console.log('app.js');
 
+var App = Backbone.Model.extend({
+  
+  
+  initialize: function() {
+    _.bindAll(this);
+  },
+
+
+  ready: function() {
+    console.log('app ready');
+    if (config.ready && accounts.ready) {
+      this.init();
+    }
+  },
+
+
+  init: function() {
+    console.log('app.init');
+  },
+
+
+  /**
+   * Set interval to poll API
+   */
+  setInterval: function(frequency) {
+    var interval = this.model.get('frequency');
+    var intervalId = setInterval(this.triggerInterval, interval);
+    this.set('intervalId', intervalId)
+    return this;
+  },
+
+
+  /**
+   * Clear existing interval
+   */
+  clearInterval: function() {
+    clearInterval(this.get('intervalId'));
+    this.unset('intervalId');
+    return this;
+  },
+
+
+  /**
+   * Trigger invervals to check for data
+   */
+  triggerInterval: function() {
+    console.log('app.triggerInterval');
+    if (this.model.get('actions', false)) {
+      this.trigger('interval');
+    }
+    return this;
+  },
+
+
+  changeInterval: function(x, y, z) {
+    debugger;
+  }
+
+
+});
+
 
 window.Post = Backbone.Model.extend({
   initialize: function() {
@@ -48,17 +109,6 @@ var Polling = Backbone.Collection.extend({
   initialize: function(options) {
     _.bindAll(this);
     _.extend(this, options);
-  },
-  setInterval: function(frequency) {
-    if (frequency && typeof(frequency) === 'string') {
-      frequency = parseInt(frequency);
-    }
-    this.intervalID = window.setInterval(this.update, frequency || config.get(this.configFrequencyName) || config.get(this.configDefaultFrequencyName));
-    return this;
-  },
-  clearInterval: function() {
-    window.clearInterval(this.intervalID);
-    return this;
   },
   toggleNotifications: function(model, enabled, other) {
     if (enabled) {
