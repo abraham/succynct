@@ -12,8 +12,8 @@
         height: 100%;
       }
       header {
-        padding-top: 60px;
-        padding-bottom: 60px;
+        padding-top: 40px;
+        padding-bottom: 40px;
       }
       footer {
         height: 60px;
@@ -22,6 +22,7 @@
         margin-right: -20px;
         padding-left: 20px;
         padding-right: 20px;
+        margin-top: 60px;
       }
       .hidden {
         display:none;
@@ -52,6 +53,18 @@
 
 
         <div id="content">
+
+
+          <div class="row" id="features">
+            <h2>Features</h2>
+            <ul>
+              <li>Post from the omnibox by typing <i>"adn" &lt;space&gt; "msg" &lt;enter&gt;</i></li>
+              <li>Post to ADN buttons on Twitter share intents</li>
+              <li>View profiles from the omnibox by typing <i>"adn" &lt;space&gt; "name" &lt;down&gt; &lt;down&gt; &lt;enter&gt;</i></li>
+              <li>Search #hashtags from the omnibox by typing <i>"adn" &lt;space&gt; "hashtag" &lt;down&gt; &lt;down&gt; &lt;down&gt; &lt;enter&gt;</i></li>
+              <li>Search #hashtags from the omnibox</li>
+            </ul>
+          </div>
 
 
           <div class="row offset4" id="loader">
@@ -85,8 +98,7 @@
                 <!-- <label class="control-label" for="frequency">Frequency</label> -->
                 <div class="controls">
                   <label class="checkbox">
-                    <input type="checkbox" id="actions" data-name="actions" checked> Check for new actions every <input value="15" type="number" class="span1" id="frequency" data-name="frequency" min="5" max="900" required> seconds
-                  </label>
+                    <input type="checkbox" id="actions" data-name="actions" checked> Check for new stuff every</label> <div class=''><input value="15" type="number" class="span1" id="frequency" data-name="frequency" min="5" max="900" required> seconds</div>
                 </div>
               </div>
 
@@ -124,20 +136,6 @@
                 </div>
               </div>
             </div>
-          </div>
-
-
-          <div class="row" id="features">
-            <h2>Features</h2>
-            <ul>
-              <li>Mention notifications</li>
-              <li>Follower notifications</li>
-              <li>Post from the omnibox by typing <i>"adn" &lt;tab&gt; "msg" &lt;enter&gt;</i></li>
-              <li>Share other people's posts</li>
-              <li>Post to ADN buttons on Twitter share intents</li>
-              <li>View profiles from the omnibox</li>
-              <li>Search #hashtags from the omnibox</li>
-            </ul>
           </div>
 
 
