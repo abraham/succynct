@@ -159,13 +159,12 @@ var Interactions = Polling.extend({
   },
 
 
-  // renderNotification: function(model, index, array) {
-  //   if (this.notificationType === 'mentions') {
-  //     this.renderMentionNotification(model);
-  //   } else {
-  //     console.log('this.notificationType', this.notificationType);
-  //   }
-  // },
+  renderNotification: function(model, collection, options) {
+    console.log('interactions.renderNotification');
+    model.view.render();
+  },
+
+
   // renderMentionNotification: function(model) {
   //   var notification = new TextNotificationView({
   //     image: model.get('user').avatar_image.url,
