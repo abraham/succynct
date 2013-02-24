@@ -8,6 +8,9 @@ var App = Backbone.View.extend({
   },
 
 
+  /**
+   * If config and accounts are ready start init
+   */
   ready: function() {
     console.log('app ready');
     if (config.ready && accounts.ready) {
@@ -16,6 +19,9 @@ var App = Backbone.View.extend({
   },
 
 
+  /**
+   * Config and accounts are ready to go
+   */
   init: function() {
     console.log('app.init');
     if (this.model.get('frequency', false)) {
