@@ -4,7 +4,10 @@ console.log('interactions.js');
  * A single interaction
  */
 window.Interaction = Backbone.Model.extend({
-
+  
+  
+  // HACK: Actions from the API don't have an id. This will not work if there are more than one interaction in any givin second
+  idAttribute: 'event_date',
 
   initialize: function() {
     _.bindAll(this);
