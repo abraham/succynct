@@ -22,6 +22,7 @@
       "js/accounts.js",
       "js/analytics.js",
       "js/views/omnibox.js",
+      "js/views/notifications.js",
       "js/background.js"
     ]
   },
