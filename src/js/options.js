@@ -16,5 +16,3 @@ optionsview = new OptionsView({
  */
 config.on('ready', optionsview.ready);
 accounts.on('ready', optionsview.ready);
-
-
