@@ -11,6 +11,7 @@ window.Interaction = Backbone.Model.extend({
 
   initialize: function() {
     _.bindAll(this);
+    this.view = new TextNotificationView({ model: this });
   },
 
 
