@@ -1,6 +1,6 @@
 console.log('app.js');
 
-var App = Backbone.Model.extend({
+var App = Backbone.View.extend({
   
   
   initialize: function() {
@@ -18,16 +18,22 @@ var App = Backbone.Model.extend({
 
   init: function() {
     console.log('app.init');
+    if (this.model.get('frequency', false)) {
+      this.setInterval(this.model.get('frequency', false));
+    }
   },
 
 
   /**
    * Set interval to poll API
    */
-  setInterval: function(frequency) {
-    var interval = this.model.get('frequency');
-    var intervalId = setInterval(this.triggerInterval, interval);
-    this.set('intervalId', intervalId)
+  setInterval: function(interval) {
+    console.log('app.setInterval', interval);
+    if (this.intervalId) {
+      this.clearInterval(this.intervalId);
+    }
+    var intervalId = setInterval(this.triggerInterval, interval * 1000);
+    this.intervalId = intervalId;
     return this;
   },
 
@@ -36,8 +42,9 @@ var App = Backbone.Model.extend({
    * Clear existing interval
    */
   clearInterval: function() {
-    clearInterval(this.get('intervalId'));
-    this.unset('intervalId');
+    console.log('app.clearInterval', this.intervalId);
+    clearInterval(this.intervalId);
+    delete this.intervalId
     return this;
   },
 
@@ -54,8 +61,15 @@ var App = Backbone.Model.extend({
   },
 
 
-  changeInterval: function(x, y, z) {
-    debugger;
+  changeInterval: function(model, value) {
+    console.log('changed', model.changed.frequency);
+    if (model.changed && model.changed.frequency) {
+      this.clearInterval(this.intervalId);
+    }
+    if (value) {
+      this.setInterval(value);
+    }
+    return this;
   }
 
 

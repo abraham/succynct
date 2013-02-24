@@ -38,8 +38,8 @@ window.Config = Backbone.Model.extend({
    * Default values that are user changeable
    */
   defaults: {
-    frequency: 15 * 1000,
-    autoDismissDelay: 10 * 1000,
+    frequency: 15,
+    autoDismissDelay: 10,
     actions: true,
     autoDismiss: true,
     actionsFollow: true,
