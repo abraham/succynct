@@ -2,23 +2,40 @@ console.log('background.js');
 
 
 config.background = true;
-config.on('ready', function(){
-  console.log('ready');
-})
+
+
+/**
+ * Create an app with the config and accounts
+ */
+app = new App({
+  model: config,
+  collection: accounts,
+});
+
+
+/**
+* Wire events
+*/
+config.on('ready', app.ready);
+accounts.on('ready', app.ready);
+config.on('change:frequency', app.changeInterval);
+// mentions.on('reset', mentions.filterNewPosts);
+// followers.on('reset', followers.filterNewFollowers);
+
+
+/**
+ * omnibox events
+ */
+chrome.omnibox.setDefaultSuggestion({ description: 'Post to App.net <match>%s</match>' });
+chrome.omnibox.onInputEntered.addListener(window.omniboxview.onInputEntered);
+chrome.omnibox.onInputChanged.addListener(window.omniboxview.onInputChanged);
 
 
 
-
-
-// if (localStorage.getItem('accessToken')) {
-//   window.account.set({ accessToken: localStorage.getItem('accessToken') });
-//   window.account.fetch();
-// } else {
-//   var n = new TextNotificationView({
-//     url: account.buildAuthUrl(),
-//     title: 'Authenticate with your App.net account',
-//     body: 'Click here to authenticate your App.net account and get started with Succynct.',
-//     image: chrome.extension.getURL('/img/angle.png')
-//   });
-//   n.render();
-// }
+// var n = new TextNotificationView({
+//   url: account.buildAuthUrl(),
+//   title: 'Connect your App.net account',
+//   body: 'Click here to connect your App.net account and get started with the awesomeness of Succynct.',
+//   image: chrome.extension.getURL('/img/angle.png')
+// });
+// n.render();
