@@ -17,12 +17,14 @@
       "libs/jquery-min.js",
       "libs/underscore-min.js",
       "libs/backbone-min.js",
+      "js/headers.js",
       "js/app.js",
       "js/config.js",
       "js/accounts.js",
       "js/analytics.js",
       "js/views/omnibox.js",
       "js/views/notifications.js",
+      "js/interactions.js",
       "js/background.js"
     ]
   },

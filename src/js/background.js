@@ -19,8 +19,7 @@ app = new App({
 config.on('ready', app.ready);
 accounts.on('ready', app.ready);
 config.on('change:frequency', app.changeInterval);
-// mentions.on('reset', mentions.filterNewPosts);
-// followers.on('reset', followers.filterNewFollowers);
+app.on('interval', interactions.checkForNew);
 
 
 /**
