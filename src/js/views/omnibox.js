@@ -57,3 +57,6 @@ window.OmniboxView = Backbone.View.extend({
     suggest(suggestions);
   }
 });
+
+
+omniboxview = new OmniboxView();
