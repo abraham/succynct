@@ -21,6 +21,7 @@
       "js/config.js",
       "js/accounts.js",
       "js/analytics.js",
+      "js/views/omnibox.js",
       "js/background.js"
     ]
   },
