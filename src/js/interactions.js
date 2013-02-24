@@ -143,7 +143,7 @@ var Interactions = Polling.extend({
       error: this.error,
       update: true,
       data: {
-        count: 2 // TODO: start using since_id
+        count: 20 // TODO: start using since_id
       },
       headers: {
         'Authorization': 'Bearer ' + accounts.at(0).get('access_token'),
