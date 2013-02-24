@@ -61,8 +61,11 @@ var App = Backbone.View.extend({
   },
 
 
+  /**
+   * When config.frequency chanages clear the existing interval and set a new one
+   */
   changeInterval: function(model, value) {
-    console.log('changed', model.changed.frequency);
+    console.log('app.changeInterval', model.changed.frequency);
     if (model.changed && model.changed.frequency) {
       this.clearInterval(this.intervalId);
     }
