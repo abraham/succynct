@@ -18,48 +18,48 @@ window.Interaction = Backbone.Model.extend({
   url: 'https://alpha-api.app.net/stream/0/posts',
 
 
-  validate: function(attributes) {
-    if (attributes.text.length > 256) {
-      return 'text is too long';
-    }
-  },
+  // validate: function(attributes) {
+  //   if (attributes.text.length > 256) {
+  //     return 'text is too long';
+  //   }
+  // },
+  // 
+  // 
+  // save: function() {
+  //   if (this.get('text') && this.get('text').length < 256) {
+  //     // TODO: for some reason this is not adding the response to the model
+  //     var jqXHR = $.post(this.url, this.attributes)
+  //         .success(this.success)
+  //         .error(this.error);
+  //   } else {
+  //     return false;
+  //   }
+  // },
 
 
-  save: function() {
-    if (this.get('text') && this.get('text').length < 256) {
-      // TODO: for some reason this is not adding the response to the model
-      var jqXHR = $.post(this.url, this.attributes)
-          .success(this.success)
-          .error(this.error);
-    } else {
-      return false;
-    }
-  },
-
-
-  success: function(response, textStatus, jqXHR) {
-    var notification = new TextNotificationView({
-      title: 'Successfully posted to App.net',
-      body: response.text,
-      image: response.user.avatar_image.url,
-      url: 'https://alpha.app.net/' + response.user.username + '/post/' + response.id,
-      timeout: 5 * 1000,
-      type: 'PostSuccess'
-    });
-    notification.render();
-  },
-
-
-  error: function() {
-    var notification = new TextNotificationView({
-      image: chrome.extension.getURL('/img/angle.png'),
-      title: 'Posting to App.net failed',
-      body: 'Please try agian. This notification will close in 10 seconds.',
-      timeout: 10 * 1000,
-      type: 'PostError'
-    });
-    notification.render();
-  }
+  // success: function(response, textStatus, jqXHR) {
+  //   var notification = new TextNotificationView({
+  //     title: 'Successfully posted to App.net',
+  //     body: response.text,
+  //     image: response.user.avatar_image.url,
+  //     url: 'https://alpha.app.net/' + response.user.username + '/post/' + response.id,
+  //     timeout: 5 * 1000,
+  //     type: 'PostSuccess'
+  //   });
+  //   notification.render();
+  // },
+  // 
+  // 
+  // error: function() {
+  //   var notification = new TextNotificationView({
+  //     image: chrome.extension.getURL('/img/angle.png'),
+  //     title: 'Posting to App.net failed',
+  //     body: 'Please try agian. This notification will close in 10 seconds.',
+  //     timeout: 10 * 1000,
+  //     type: 'PostError'
+  //   });
+  //   notification.render();
+  // }
 
 
 });
@@ -73,7 +73,7 @@ var Polling = Backbone.Collection.extend({
 
   initialize: function(options) {
     _.bindAll(this, 'error');
-    _.extend(this, options);
+    // _.extend(this, options);
   },
 
 
@@ -85,33 +85,33 @@ var Polling = Backbone.Collection.extend({
   // },
 
 
-  error: function(collection, response, options) {
-    // TODO: update copy of notifications
-    if (response.status === 401) {
-      console.log('Invalid access_token');
-      var notification = new TextNotificationView({
-        image: chrome.extension.getURL('/img/angle.png'),
-        title: 'Authentication failed',
-        body: 'Click here to sign in to App.net again.',
-        url: chrome.extension.getURL('/options.html'),
-        type: 'AuthError'
-      });
-      notification.render();
-      // TODO: update this to support multiple accounts
-      accounts.remove(accounts.at(0));
-    } else {
-      console.log('Unkown error');
-      var notification = new TextNotificationView({
-        image: chrome.extension.getURL('/img/angle.png'),
-        title: 'Unkown error checking for posts',
-        body: 'If you get this a lot please ping @abraham',
-        url: 'https://alpha.app.net/abraham',
-        type: 'UnknownError'
-      });
-      notification.render();
-    }
-    return this;
-  }
+  // error: function(collection, response, options) {
+  //   // TODO: update copy of notifications
+  //   if (response.status === 401) {
+  //     console.log('Invalid access_token');
+  //     var notification = new TextNotificationView({
+  //       image: chrome.extension.getURL('/img/angle.png'),
+  //       title: 'Authentication failed',
+  //       body: 'Click here to sign in to App.net again.',
+  //       url: chrome.extension.getURL('/options.html'),
+  //       type: 'AuthError'
+  //     });
+  //     notification.render();
+  //     // TODO: update this to support multiple accounts
+  //     accounts.remove(accounts.at(0));
+  //   } else {
+  //     console.log('Unkown error');
+  //     var notification = new TextNotificationView({
+  //       image: chrome.extension.getURL('/img/angle.png'),
+  //       title: 'Unkown error checking for posts',
+  //       body: 'If you get this a lot please ping @abraham',
+  //       url: 'https://alpha.app.net/abraham',
+  //       type: 'UnknownError'
+  //     });
+  //     notification.render();
+  //   }
+  //   return this;
+  // }
 
 
 });
