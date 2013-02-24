@@ -34,16 +34,16 @@ window.TextNotificationView = Backbone.View.extend({
         chrome.tabs.create({ url: this.url });
       }
       this.close();
-      _gaq.push(['_trackEvent', 'Notifications', 'Click', this.type]);
+      // _gaq.push(['_trackEvent', 'Notifications', 'Click', this.type]);
     }
     if (this.options.timeout) {
       setTimeout(function(){
         notification.close();
-        _gaq.push(['_trackEvent', 'Notifications', 'Timeout', this.type]);
+        // _gaq.push(['_trackEvent', 'Notifications', 'Timeout', this.type]);
       }, this.options.timeout);
       
     }
     notification.show();
-    _gaq.push(['_trackEvent', 'Notifications', 'Show', this.options.type]);
+    // _gaq.push(['_trackEvent', 'Notifications', 'Show', this.options.type]);
   }
 });
