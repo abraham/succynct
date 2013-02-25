@@ -117,7 +117,7 @@ window.TextNotificationView = Backbone.View.extend({
     } else if ('repost' === action) {
       return {
         image: user.avatar_image.url,
-        title: 'Repost by @' + user.username + ' to your post',
+        title: 'Repost by @' + user.username + ' of your post',
         body: object.text,
         url: object.canonical_url
       }
