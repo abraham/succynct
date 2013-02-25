@@ -106,6 +106,8 @@ window.TextNotificationView = Backbone.View.extend({
         url: object.canonical_url
       }
     } else if ('reply' === action) {
+      // Does not include the reply post so ignore and use the mentions API instead
+      return false;
       return {
         image: user.avatar_image.url,
         title: 'Reply by @' + user.username + ' to your post',
