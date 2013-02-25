@@ -94,14 +94,14 @@ window.TextNotificationView = Backbone.View.extend({
       }
       return {
         image: user.avatar_image.url,
-        title: 'Followed by @' + user.username + ' on ADN',
+        title: 'Followed by @' + user.username,
         body: user.description.text || '',
         url: user.canonical_url
       }
     } else if ('star' === action) {
       return {
         image: user.avatar_image.url,
-        title: 'Starred by @' + user.username + ' on your post',
+        title: 'Star by @' + user.username + ' on your post',
         body: object.text,
         url: object.canonical_url
       }
@@ -110,7 +110,7 @@ window.TextNotificationView = Backbone.View.extend({
       return false;
       return {
         image: user.avatar_image.url,
-        title: 'Reply by @' + user.username + ' to your post',
+        title: 'Reply from @' + user.username + ' to your post',
         body: object.text,
         url: object.canonical_url
       }
