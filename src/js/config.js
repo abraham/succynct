@@ -117,7 +117,7 @@ window.Config = Backbone.Model.extend({
    setModelChangesToChrome: _.debounce(function(model, options) {
     console.log('config.setModelChangesToChrome:set', model, options);
     chrome.storage.sync.set({'config': this.attributes});
-  }, 5000),
+  }, 1 * 1000),
 });
 
 
