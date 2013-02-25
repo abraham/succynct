@@ -119,11 +119,7 @@ var OptionsView = Backbone.View.extend({
    * Set the href when a user clicks to add a new account
    */
   setAuthenticateHref: function(event) {
-    url = 'https://account.app.net/oauth/authenticate'
-      + '?client_id=' + config.get('clientId')
-      + '&response_type=token'
-      + '&redirect_uri=' + chrome.extension.getURL('/callback.html')
-      + '&scope=' + config.get('apiScope');
+    var url = this.collection.buildAuthUrl();
     $(event.currentTarget).attr('href', url);
     // TODO: this is a bit of a hack
     // Redirects tend to cache weird for extension files so open and close tabs instead

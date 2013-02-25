@@ -99,6 +99,20 @@ window.Accounts = Backbone.Collection.extend({
   }, 2000),
 
 
+  /**
+   * Build the auth URL to authenticate account
+   */
+  buildAuthUrl: function() {
+    var url = 'https://account.app.net/oauth/authenticate'
+    url += '?client_id=' + config.get('clientId')
+    url += '&response_type=token'
+    url += '&redirect_uri=' + chrome.extension.getURL('/callback.html')
+    url += '&scope=' + config.get('apiScope');
+    return url;
+  }
+
+
 });
+
 
 window.accounts = new Accounts();
