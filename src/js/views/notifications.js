@@ -66,7 +66,12 @@ window.TextNotificationView = Backbone.View.extend({
    * Build webkitNotification so it is ready to show
    */
   build: function() {
-    var details = this.selectDetails();
+    // TODO: Refactor this code
+    if (this.options && this.options.title) {
+      var details = this.options || this.selectDetails();
+    } else {
+      var details = this.selectDetails();
+    }
     if (!details) {
       return false;
     }
