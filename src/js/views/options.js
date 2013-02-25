@@ -7,6 +7,7 @@ console.log('views/options.js');
 var OptionsView = Backbone.View.extend({
   /**
    * Template for single account in list
+   * Doesn't use a template due to CSP restrictions
    */
   template: function(account) {
     var html = '<li>';
