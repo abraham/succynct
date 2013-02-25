@@ -89,6 +89,9 @@ window.TextNotificationView = Backbone.View.extend({
     var object = this.model.get('objects')[0];
     if ('follow' === action) {
       var title = 'Followed by @' + user.username + ' on ADN';
+      if (!config.get('actionsFollow')) {
+        return false;
+      }
       if (user.you_follow) {
         title = 'Followed back by @' + user.username + ' on ADN';
       }
@@ -99,6 +102,9 @@ window.TextNotificationView = Backbone.View.extend({
         url: user.canonical_url
       }
     } else if ('star' === action) {
+      if (!config.get('actionsStar')) {
+        return false;
+      }
       return {
         image: user.avatar_image.url,
         title: 'Star by @' + user.username + ' on your post',
@@ -108,6 +114,9 @@ window.TextNotificationView = Backbone.View.extend({
     } else if ('reply' === action) {
       // Does not include the reply post so ignore and use the mentions API instead
       return false;
+      if (!config.get('actionsReply')) {
+        return false;
+      }
       return {
         image: user.avatar_image.url,
         title: 'Reply from @' + user.username + ' to your post',
@@ -115,6 +124,9 @@ window.TextNotificationView = Backbone.View.extend({
         url: object.canonical_url
       }
     } else if ('repost' === action) {
+      if (!config.get('actionsRepost')) {
+        return false;
+      }
       return {
         image: user.avatar_image.url,
         title: 'Repost by @' + user.username + ' of your post',
