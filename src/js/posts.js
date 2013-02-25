@@ -41,7 +41,7 @@ window.Post = Backbone.Model.extend({
   success: function(model, textStatus, jqXHR) {
     var notification = new TextNotificationView({
       title: 'Successfully posted to App.net',
-      body: model.get(text),
+      body: model.get('text'),
       image: model.get('user').avatar_image.url,
       url: model.get('canonical_url'),
       timeout: 5 * 1000,
