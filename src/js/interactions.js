@@ -136,7 +136,7 @@ var Interactions = Polling.extend({
 
 
   checkForNew: function() {
-    if (accounts.length === 0) {
+    if (accounts.length === 0 || !navigator.onLine) {
       return false;
     }
     this.fetch({
