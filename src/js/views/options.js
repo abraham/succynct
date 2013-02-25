@@ -21,7 +21,9 @@ var OptionsView = Backbone.View.extend({
   events: {
     "click .start-auth": "setAuthenticateHref",
     "click button.accounts-remove": 'removeAccount',
-    'click input[type="checkbox"]': 'setCheckbox',
+    'click input[type="checkbox"]': 'setCheckboxs',
+    'change input[type="number"]': 'setNumbers',
+    'keyup input[type="number"]': 'setNumbers',
   },
 
 
@@ -57,7 +59,12 @@ var OptionsView = Backbone.View.extend({
       console.log(name, that.model.get(name));
       $element.prop('checked', that.model.get(name));
     });
-    
+    $('input[type="number"]').each(function(index, element) {
+      var $element = $(element);
+      var name = $element.data('name');
+      console.log(name, that.model.get(name));
+      $element.prop('value', that.model.get(name));
+    });
     return this;
   },
 
@@ -126,11 +133,26 @@ var OptionsView = Backbone.View.extend({
 
 
   /**
-   * Set checkbox value to config model
+   * Set checkbox values to config model
    */
-  setCheckbox: function(event) {
+  setCheckboxs: function(event) {
     var name = $(event.currentTarget).data('name');
     var value = $(event.currentTarget).prop('checked');
     this.model.set(name, value);
+    return this;
   },
+
+
+  /**
+   * Set number values to config model
+   */
+   setNumbers: function(event) {
+     var name = $(event.currentTarget).data('name');
+     var value = $(event.currentTarget).prop('value');
+     this.model.set(name, parseInt(value));
+     console.log(name, value);
+     return this;
+   }
+
+
 });
