@@ -25,6 +25,7 @@
       "js/views/omnibox.js",
       "js/views/notifications.js",
       "js/interactions.js",
+      "js/mentions.js",
       "js/background.js"
     ]
   },

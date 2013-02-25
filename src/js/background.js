@@ -20,7 +20,9 @@ config.on('ready', app.ready);
 accounts.on('ready', app.ready);
 config.on('change:frequency', app.changeInterval);
 app.on('interval', interactions.checkForNew);
+app.on('interval', mentions.checkForNew);
 interactions.on('add', interactions.renderNotification);
+mentions.on('add', mentions.renderNotification);
 
 
 /**

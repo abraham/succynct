@@ -85,6 +85,20 @@ window.TextNotificationView = Backbone.View.extend({
   selectDetails: function() {
     console.log('notification.selectDetails');
     var action = this.model.get('action');
+    if (!action && this.model.get('id')) {
+      // A mention does not have the same structure as interactions
+      if (!config.get('actionsMention')) {
+        return false;
+      }
+      var user = this.model.get('user');
+      var object = this.model.toJSON();
+      return {
+        image: user.avatar_image.url,
+        title: 'Reply from @' + user.username + ' to your post',
+        body: object.text,
+        url: object.canonical_url
+      }
+    }
     var user = this.model.get('users')[0];
     var object = this.model.get('objects')[0];
     if ('follow' === action) {
