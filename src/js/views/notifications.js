@@ -83,6 +83,7 @@ window.TextNotificationView = Backbone.View.extend({
    * Select the title, body, image, url based on the action type
    */
   selectDetails: function() {
+    // TODO: refactor this
     console.log('notification.selectDetails');
     var action = this.model.get('action');
     if (!action && this.model.get('id')) {
@@ -92,9 +93,13 @@ window.TextNotificationView = Backbone.View.extend({
       }
       var user = this.model.get('user');
       var object = this.model.toJSON();
+      var title = 'Mention from @' + user.username;
+      if (object.reply_to) {
+        title = 'Reply from @' + user.username + ' to your post';
+      }
       return {
         image: user.avatar_image.url,
-        title: 'Reply from @' + user.username + ' to your post',
+        title: title,
         body: object.text,
         url: object.canonical_url
       }
