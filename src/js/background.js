@@ -33,11 +33,14 @@ chrome.omnibox.onInputEntered.addListener(window.omniboxview.onInputEntered);
 chrome.omnibox.onInputChanged.addListener(window.omniboxview.onInputChanged);
 
 
-
-// var n = new TextNotificationView({
-//   url: account.buildAuthUrl(),
-//   title: 'Connect your App.net account',
-//   body: 'Click here to connect your App.net account and get started with the awesomeness of Succynct.',
-//   image: chrome.extension.getURL('/img/angle.png')
-// });
-// n.render();
+accounts.on('ready', function() {
+  if (accounts.length === 0) {
+    var n = new TextNotificationView({
+      url: accounts.buildAuthUrl(),
+      title: 'Connect your App.net account',
+      body: 'Click to connect your App.net account and get started with the awesomeness of Succynct.',
+      image: chrome.extension.getURL('/img/angle.png')
+    });
+    n.render();
+  }
+});
