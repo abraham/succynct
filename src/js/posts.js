@@ -1,7 +1,7 @@
 console.log('posts');
 
 /**
- * A single interaction
+ * A single post
  */
 window.Post = Backbone.Model.extend({
 
@@ -13,7 +13,9 @@ window.Post = Backbone.Model.extend({
 
   url: 'https://alpha-api.app.net/stream/0/posts',
 
-
+  /**
+   * Basic validations of a post
+   */
   validate: function(attributes) {
     if (attributes.text.length > 256) {
       return 'text is too long';
@@ -33,6 +35,9 @@ window.Post = Backbone.Model.extend({
   // },
 
 
+  /**
+   * Pull the post data out of the reponse object
+   */
   parse: function(response) {
     return response.data;
   },
