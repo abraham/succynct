@@ -11,8 +11,6 @@ window.Post = Backbone.Model.extend({
   },
 
 
-  url: 'https://alpha-api.app.net/stream/0/posts',
-
   /**
    * Basic validations of a post
    */
@@ -83,12 +81,30 @@ var Posts = Backbone.Collection.extend({
   },
 
 
-  // update: function() {
-  //   if (window.account && window.account.get('accessToken') && config.get(this.configName)) {
-  //     this.fetch({ error: this.error });
-  //   }
-  //   return this;
-  // },
+  url: 'https://alpha-api.app.net/stream/0/posts',
+
+
+  /**
+   * Poll API for updates
+   */
+  requestUpdates: function() {
+    // If there is not any authenticated users or network request, exit
+    if (accounts.length === 0 || !navigator.onLine) {
+      return false;
+    }
+    this.fetch({
+      error: this.error,
+      update: true,
+      data: {
+        count: 20 // TODO: start using since_id
+      },
+      headers: {
+        'Authorization': 'Bearer ' + accounts.at(0).get('access_token'),
+        // HACK: should be applied globally
+        'X-ADN-Migration-Overrides': 'response_envelope=1&disable_min_max_id=1&follow_pagination=1&pagination_ids=1'
+      }
+    });
+  },
 
 
   error: function(collection, response, options) {
