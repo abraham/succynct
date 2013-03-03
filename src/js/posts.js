@@ -85,6 +85,14 @@ var Posts = Backbone.Collection.extend({
 
 
   /**
+   * Pull the data out of the reponse object
+   */
+  parse: function(response) {
+    return response.data;
+  },
+
+
+  /**
    * Poll API for updates
    */
   requestUpdates: function() {
