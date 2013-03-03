@@ -16,13 +16,13 @@ app = new App({
 /**
 * Wire events
 */
-config.on('ready', app.ready);
-accounts.on('ready', app.ready);
-config.on('change:frequency', app.changeInterval);
-app.on('interval', interactions.checkForNew);
-app.on('interval', mentions.checkForNew);
-interactions.on('add', interactions.renderNotification);
-mentions.on('add', mentions.renderNotification);
+config.on('ready', app.ready, app);
+accounts.on('ready', app.ready, app);
+config.on('change:frequency', app.changeInterval, app);
+app.on('interval', interactions.checkForNew, interactions);
+app.on('interval', mentions.checkForNew, mentions);
+interactions.on('add', interactions.renderNotification, interactions);
+mentions.on('add', mentions.renderNotification, mentions);
 
 
 /**
