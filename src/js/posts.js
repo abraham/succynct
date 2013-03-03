@@ -76,7 +76,7 @@ var Posts = Backbone.Collection.extend({
 
 
   initialize: function(options) {
-    _.bindAll(this, 'error');
+    _.bindAll(this);
     _.extend(this, options);
   },
 
