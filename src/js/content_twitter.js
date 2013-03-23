@@ -5,6 +5,8 @@ _gaq.push(['_trackPageview']);
 
 $('input.submit').before('<input class="button selected submit succynct-submit" value="Post to ADN">');
 $('.succynct-submit').click(function() {
+  alert('@abraham was lazy and broke that. Yell at him to fix it.');
+  return false;
   chrome.extension.sendMessage({
     method: 'post',
     action: 'posts',
