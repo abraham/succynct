@@ -122,7 +122,7 @@ window.TextNotificationView = Backbone.View.extend({
       return {
         image: user.avatar_image.url,
         title: 'Followed by @' + user.username,
-        body: user.description.text || '',
+        body: user && user.description && user && user.description.text || '',
         url: user.canonical_url
       }
     } else if ('star' === action) {
