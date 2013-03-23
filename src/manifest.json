@@ -25,7 +25,6 @@
       "js/views/omnibox.js",
       "js/views/notifications.js",
       "js/posts.js",
-      "js/hashtags.js",
       "js/interactions.js",
       "js/mentions.js",
       "js/background.js"
