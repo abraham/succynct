@@ -86,7 +86,7 @@ var OptionsView = Backbone.View.extend({
     for (index in accounts) {
       html += that.template(accounts[index]);
     }
-    html += '<br><br><li class="muted" colspan="3">Support for multiple accounts coming soon</li>';
+    html += '<br><br><li class="muted" colspan="3">Support for multiple accounts coming soon.</li>';
     that.$('#accounts-list').fadeIn();
     that.$('#accounts-list').html('<ul class="unstyled">' + html + '</ul>');
     return this;
