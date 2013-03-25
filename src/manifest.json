@@ -17,7 +17,6 @@
       "libs/jquery-min.js",
       "libs/underscore-min.js",
       "libs/backbone-min.js",
-      "js/headers.js",
       "js/app.js",
       "js/config.js",
       "js/accounts.js",
