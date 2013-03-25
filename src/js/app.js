@@ -24,11 +24,12 @@ var App = Backbone.View.extend({
    */
   init: function() {
     console.log('app.init');
-    if (this.model.get('frequency', false)) {
-      this.setInterval(this.model.get('frequency', false));
+    debugger;
+    if (this.model.get('frequency')) {
+      this.setInterval(this.model.get('frequency'));
     }
-    interactions.checkForNew();
-    mentions.checkForNew();
+    interactions.checkForNew({silent: true});
+    mentions.checkForNew({silent: true});
   },
 
 
