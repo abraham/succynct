@@ -12,7 +12,7 @@ app = new App({
   collection: accounts,
 });
 app.ready();
-
+promptAuth();
 
 /**
 * Wire events
@@ -36,6 +36,10 @@ chrome.omnibox.onInputChanged.addListener(window.omniboxview.onInputChanged);
  * If there are no accounts, prompt for auth
  */
 accounts.on('ready', function() {
+  promptAuth();
+});
+
+function promptAuth() {
   if (accounts.length === 0) {
     var n = new TextNotificationView({
       url: accounts.buildAuthUrl(),
@@ -45,4 +49,4 @@ accounts.on('ready', function() {
     });
     n.render();
   }
-});
+}
