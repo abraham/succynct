@@ -5,6 +5,8 @@ var App = Backbone.View.extend({
   
   initialize: function() {
     _.bindAll(this);
+    this.model.on('ready', this.ready);
+    this.collection.on('ready', this.ready);
   },
 
 

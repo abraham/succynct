@@ -74,17 +74,17 @@ var Mentions = Polling.extend({
   url: 'https://alpha-api.app.net/stream/0/users/me/mentions',
 
 
-
   initialize: function() {
     _.bindAll(this, 'checkForNew');
   },
 
 
-  checkForNew: function() {
+  checkForNew: function(options) {
     if (accounts.length === 0 || !navigator.onLine) {
       return false;
     }
-    this.fetch({
+    // TOOD: this.error is undefined
+    var params = {
       error: this.error,
       update: true,
       data: {
@@ -95,7 +95,10 @@ var Mentions = Polling.extend({
         // HACK: should be applied globally
         'X-ADN-Migration-Overrides': 'response_envelope=1&disable_min_max_id=1&follow_pagination=1&pagination_ids=1'
       }
-    });
+    };
+    _.extend(params, options);
+    console.log('mentions.checkForNew', params);
+    this.fetch(params);
   },
 
 

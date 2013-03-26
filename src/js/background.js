@@ -11,13 +11,12 @@ app = new App({
   model: config,
   collection: accounts,
 });
+app.ready();
 
 
 /**
 * Wire events
 */
-config.on('ready', app.ready, app);
-accounts.on('ready', app.ready, app);
 config.on('change:frequency', app.changeInterval, app);
 app.on('interval', interactions.checkForNew, interactions);
 app.on('interval', mentions.checkForNew, mentions);
@@ -33,6 +32,9 @@ chrome.omnibox.onInputEntered.addListener(window.omniboxview.onInputEntered);
 chrome.omnibox.onInputChanged.addListener(window.omniboxview.onInputChanged);
 
 
+/**
+ * If there are no accounts, prompt for auth
+ */
 accounts.on('ready', function() {
   if (accounts.length === 0) {
     var n = new TextNotificationView({
