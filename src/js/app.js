@@ -26,7 +26,6 @@ var App = Backbone.View.extend({
    */
   init: function() {
     console.log('app.init');
-    debugger;
     if (this.model.get('frequency')) {
       this.setInterval(this.model.get('frequency'));
     }
