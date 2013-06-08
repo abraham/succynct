@@ -22,7 +22,22 @@ app.on('interval', interactions.checkForNew, interactions);
 app.on('interval', mentions.checkForNew, mentions);
 interactions.on('add', interactions.renderNotification, interactions);
 mentions.on('add', mentions.renderNotification, mentions);
-
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    if (request.method == "post" && request.action == 'posts') {
+      var post = new Post();
+      var save = post.save({ text: request.data.text }, {
+        headers: {
+          'Authorization': 'Bearer ' + accounts.at(0).get('access_token')
+        },
+        success: post.success,
+        error: post.error,
+      });
+      if (save == false) {
+        post.error('Post length was too long.');
+      }
+    }
+  });
 
 /**
  * omnibox events

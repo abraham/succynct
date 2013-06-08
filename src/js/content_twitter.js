@@ -5,11 +5,10 @@ _gaq.push(['_trackPageview']);
 
 $('input.submit').before('<input class="button selected submit succynct-submit" value="Post to ADN">');
 $('.succynct-submit').click(function() {
-  alert('@abraham was lazy and broke that. Yell at him to fix it.');
-  return false;
-  chrome.extension.sendMessage({
+  var message = {
     method: 'post',
     action: 'posts',
-    data: { status: $('#status').val() }
-  }, function(response) { });
+    data: { text: $('#status').val() }
+  };
+  chrome.runtime.sendMessage(message, function(response) { });
 });
