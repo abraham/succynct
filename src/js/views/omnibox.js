@@ -34,9 +34,7 @@ window.OmniboxView = Backbone.View.extend({
     // TODO: catch errors
     post.save({ text: text }, {
       headers: {
-        'Authorization': 'Bearer ' + accounts.at(0).get('access_token'),
-        // HACK: should be applied globally
-        'X-ADN-Migration-Overrides': 'response_envelope=1&disable_min_max_id=1&follow_pagination=1&pagination_ids=1'
+        'Authorization': 'Bearer ' + accounts.at(0).get('access_token')
       },
       success: post.success,
       error: post.error,

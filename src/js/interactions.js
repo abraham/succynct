@@ -147,9 +147,7 @@ var Interactions = Polling.extend({
         count: 20 // TODO: start using since_id
       },
       headers: {
-        'Authorization': 'Bearer ' + accounts.at(0).get('access_token'),
-        // HACK: should be applied globally
-        'X-ADN-Migration-Overrides': 'response_envelope=1&disable_min_max_id=1&follow_pagination=1&pagination_ids=1'
+        'Authorization': 'Bearer ' + accounts.at(0).get('access_token')
       }
     };
     _.extend(params, options);
