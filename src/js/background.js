@@ -12,7 +12,7 @@ app = new App({
   collection: accounts,
 });
 app.ready();
-promptAuth();
+setTimeout(promptAuth, 15 * 1000);
 
 /**
 * Wire events
