@@ -13,7 +13,6 @@
 // limitations under the License.
 
 (function(global) {
-
   "use strict";
 
   var matchesSelector = 'matchesSelector';
@@ -23,7 +22,9 @@
     matchesSelector = 'mozMatchesSelector';
 
   var MutationObserver = global.MutationObserver || global.WebKitMutationObserver || global.MozMutationObserver;
-  if (typeof MutationObserver != 'function') {
+  if (MutationObserver === undefined) {
+    console.log('MutationSummary cannot load: DOM Mutation Observers are required.');
+    console.log('https://developer.mozilla.org/en-US/docs/DOM/MutationObserver');
     return;
   }
 
@@ -108,10 +109,11 @@
 
   var forEach = Array.prototype.forEach.call.bind(Array.prototype.forEach);
 
-  function MutationProjection(rootNode, elementFilter, calcReordered) {
+  function MutationProjection(rootNode, elementFilter, calcReordered, calcOldPreviousSibling) {
     this.rootNode = rootNode;
     this.elementFilter = elementFilter;
     this.calcReordered = calcReordered;
+    this.calcOldPreviousSibling = calcOldPreviousSibling;
   }
 
   MutationProjection.prototype = {
@@ -222,6 +224,31 @@
       var visited = new NodeMap;
       var self = this;
 
+      function ensureHasOldPreviousSiblingIfNeeded(node) {
+        if (!self.calcOldPreviousSibling)
+          return;
+
+        self.processChildlistChanges();
+
+        var parentNode = node.parentNode;
+        var change = self.changeMap.get(node);
+        if (change && change.oldParentNode)
+          parentNode = change.oldParentNode;
+
+        change = self.childlistChanges.get(parentNode);
+        if (!change) {
+          change = {
+            oldPrevious: new NodeMap
+          };
+
+          self.childlistChanges.set(parentNode, change);
+        }
+
+        if (!change.oldPrevious.has(node)) {
+          change.oldPrevious.set(node, node.previousSibling);
+        }
+      }
+
       function visitNode(node, parentReachable) {
         if (visited.has(node))
           return;
@@ -245,12 +272,15 @@
           entered.push(node);
         } else if (reachable == EXITED) {
           exited.push(node);
+          ensureHasOldPreviousSiblingIfNeeded(node);
+
         } else if (reachable == STAYED_IN) {
           var movement = STAYED_IN;
 
           if (change && change.childList) {
             if (change.oldParentNode !== node.parentNode) {
               movement = REPARENTED;
+              ensureHasOldPreviousSiblingIfNeeded(node);
             } else if (self.calcReordered && wasReordered(node)) {
               movement = REORDERED;
             }
@@ -318,11 +348,16 @@
     },
 
     getOldPreviousSibling: function(node) {
-      var change = this.childlistChanges.get(node.parentNode);
-      if (!change || !this.wasReordered(node))
+      var parentNode = node.parentNode;
+      var change = this.changeMap.get(node);
+      if (change && change.oldParentNode)
+        parentNode = change.oldParentNode;
+
+      change = this.childlistChanges.get(parentNode);
+      if (!change)
         throw Error('getOldPreviousSibling requested on invalid node.');
 
-      return change.oldPreviousSibling.get(node);
+      return change.oldPrevious.get(node);
     },
 
     getOldAttribute: function(element, attrName) {
@@ -683,12 +718,13 @@
       }
 
       var reachabilityChange = this.reachabilityChange.bind(this);
+      var self = this;
 
       this.mutations.forEach(function(mutation) {
         if (mutation.type != 'childList')
           return;
 
-        if (reachabilityChange(mutation.target) != STAYED_IN)
+        if (reachabilityChange(mutation.target) != STAYED_IN && !self.calcOldPreviousSibling)
           return;
 
         var change = getChildlistChange(mutation.target);
@@ -742,22 +778,20 @@
 
       this.processChildlistChanges();
 
-      var change = this.childlistChanges.get(node.parentNode);
+      var parentNode = node.parentNode;
+      var change = this.changeMap.get(node);
+      if (change && change.oldParentNode)
+        parentNode = change.oldParentNode;
+
+      change = this.childlistChanges.get(parentNode);
+      if (!change)
+        return false;
+
       if (change.moved)
         return change.moved.get(node);
 
       var moved = change.moved = new NodeMap;
       var pendingMoveDecision = new NodeMap;
-
-      function isFirstOfPending(node) {
-        // Ensure that the result is deterministic.
-        while (node = node.previousSibling) {
-          if (pendingMoveDecision.has(node))
-            return false;
-        }
-
-        return true;
-      }
 
       function isMoved(node) {
         if (!node)
@@ -770,7 +804,7 @@
           return didMove;
 
         if (pendingMoveDecision.has(node)) {
-          didMove = isFirstOfPending(node);
+          didMove = true;
         } else {
           pendingMoveDecision.set(node, true);
           didMove = getPrevious(node) !== getOldPrevious(node);
@@ -786,7 +820,7 @@
         return didMove;
       }
 
-      var oldPreviousCache = change.oldPreviousSibling = new NodeMap;
+      var oldPreviousCache = new NodeMap;
       function getOldPrevious(node) {
         var oldPrevious = oldPreviousCache.get(node);
         if (oldPrevious !== undefined)
@@ -1276,6 +1310,7 @@
       'callback': true, // required
       'queries': true,  // required
       'rootNode': true,
+      'oldPreviousSibling': true,
       'observeOwnChanges': true
     };
 
@@ -1292,6 +1327,7 @@
     opts.callback = options.callback;
     opts.rootNode = options.rootNode || document;
     opts.observeOwnChanges = options.observeOwnChanges;
+    opts.oldPreviousSibling = options.oldPreviousSibling;
 
     if (!options.queries || !options.queries.length)
       throw Error('Invalid options: queries must contain at least one query request object.');
@@ -1542,7 +1578,7 @@
       if (!mutations || !mutations.length)
         return [];
 
-      var projection = new MutationProjection(root, elementFilter, calcReordered);
+      var projection = new MutationProjection(root, elementFilter, calcReordered, options.oldPreviousSibling);
       projection.processMutations(mutations);
 
       return options.queries.map(function(query) {
@@ -1581,7 +1617,8 @@
       if (changesToReport(summaries))
         callback(summaries);
 
-      if (!options.observeOwnChanges) {
+      // disconnect() may have been called during the callback.
+      if (!options.observeOwnChanges && connected) {
         checkpointQueryValidators();
         observer.observe(root, observerOptions);
       }
@@ -1596,23 +1633,23 @@
       checkpointQueryValidators();
     };
 
-    this.disconnect = function() {
+    var takeSummaries = this.takeSummaries = function() {
       if (!connected)
         throw Error('Not connected');
 
-      // TODO(rafaelw): Remove check when Chrome M18 is gone.
-      var mutations;
-      if (typeof observer.takeRecords == 'function')
-        mutations = observer.takeRecords();
-      else
-        console.log("Warning: MutationObserver.takeRecords not implemented. Current changes cannot be reported.");
+      var mutations = observer.takeRecords();
+      var summaries = createSummaries(mutations);
+      if (changesToReport(summaries))
+        return summaries;
+    };
+
+    this.disconnect = function() {
+      var summaries = takeSummaries();
 
       observer.disconnect();
       connected = false;
 
-      var summaries = createSummaries(mutations);
-      if (changesToReport(summaries))
-        return summaries;
+      return summaries;
     };
 
     this.reconnect();

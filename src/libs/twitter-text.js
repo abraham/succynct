@@ -1,14 +1,8 @@
-if (typeof window === "undefined" || window === null) {
-  window = { twttr: {} };
-}
-if (window.twttr == null) {
-  window.twttr = {};
-}
-if (typeof twttr === "undefined" || twttr === null) {
-  twttr = {};
-}
-
 (function() {
+  if (typeof twttr === "undefined" || twttr === null) {
+    var twttr = {};
+  }
+
   twttr.txt = {};
   twttr.txt.regexen = {};
 
@@ -105,6 +99,8 @@ if (typeof twttr === "undefined" || twttr === null) {
   twttr.txt.regexen.spaces = regexSupplant("[" + UNICODE_SPACES.join("") + "]");
   twttr.txt.regexen.invalid_chars_group = regexSupplant(INVALID_CHARS.join(""));
   twttr.txt.regexen.punct = /\!'#%&'\(\)*\+,\\\-\.\/:;<=>\?@\[\]\^_{|}~\$/;
+  twttr.txt.regexen.rtl_chars = /[\u0600-\u06FF]|[\u0750-\u077F]|[\u0590-\u05FF]|[\uFE70-\uFEFF]/mg;
+  twttr.txt.regexen.non_bmp_code_pairs = /[\uD800-\uDBFF][\uDC00-\uDFFF]/mg;
 
   var nonLatinHashtagChars = [];
   // Cyrillic
@@ -234,15 +230,22 @@ if (typeof twttr === "undefined" || twttr === null) {
   twttr.txt.regexen.validSubdomain = regexSupplant(/(?:(?:#{validDomainChars}(?:[_-]|#{validDomainChars})*)?#{validDomainChars}\.)/);
   twttr.txt.regexen.validDomainName = regexSupplant(/(?:(?:#{validDomainChars}(?:-|#{validDomainChars})*)?#{validDomainChars}\.)/);
   twttr.txt.regexen.validGTLD = regexSupplant(/(?:(?:aero|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|xxx)(?=[^0-9a-zA-Z]|$))/);
-  twttr.txt.regexen.validCCTLD = regexSupplant(/(?:(?:ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cs|cu|cv|cx|cy|cz|dd|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|ss|st|su|sv|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|za|zm|zw)(?=[^0-9a-zA-Z]|$))/);
+  twttr.txt.regexen.validCCTLD = regexSupplant(RegExp(
+        "(?:(?:ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|" +
+        "ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cs|cu|cv|cx|cy|cz|dd|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|" +
+        "ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|" +
+        "ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|" +
+        "na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|" +
+        "sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|ss|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|" +
+        "ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|za|zm|zw)(?=[^0-9a-zA-Z]|$))"));
   twttr.txt.regexen.validPunycode = regexSupplant(/(?:xn--[0-9a-z]+)/);
   twttr.txt.regexen.validDomain = regexSupplant(/(?:#{validSubdomain}*#{validDomainName}(?:#{validGTLD}|#{validCCTLD}|#{validPunycode}))/);
-  twttr.txt.regexen.validAsciiDomain = regexSupplant(/(?:(?:[a-z0-9#{latinAccentChars}]+)\.)+(?:#{validGTLD}|#{validCCTLD}|#{validPunycode})/gi);
+  twttr.txt.regexen.validAsciiDomain = regexSupplant(/(?:(?:[\-a-z0-9#{latinAccentChars}]+)\.)+(?:#{validGTLD}|#{validCCTLD}|#{validPunycode})/gi);
   twttr.txt.regexen.invalidShortDomain = regexSupplant(/^#{validDomainName}#{validCCTLD}$/);
 
   twttr.txt.regexen.validPortNumber = regexSupplant(/[0-9]+/);
 
-  twttr.txt.regexen.validGeneralUrlPathChars = regexSupplant(/[a-z0-9!\*';:=\+,\.\$\/%#\[\]\-_~|&#{latinAccentChars}]/i);
+  twttr.txt.regexen.validGeneralUrlPathChars = regexSupplant(/[a-z0-9!\*';:=\+,\.\$\/%#\[\]\-_~@|&#{latinAccentChars}]/i);
   // Allow URL paths to contain balanced parens
   //  1. Used in Wikipedia URLs like /Primer_(film)
   //  2. Used in IIS sessions like /S(dfd346)/
@@ -259,7 +262,7 @@ if (typeof twttr === "undefined" || twttr === null) {
       ')|(?:@#{validGeneralUrlPathChars}+\/)'+
     ')', 'i');
 
-  twttr.txt.regexen.validUrlQueryChars = /[a-z0-9!?\*'\(\);:&=\+\$\/%#\[\]\-_\.,~|]/i;
+  twttr.txt.regexen.validUrlQueryChars = /[a-z0-9!?\*'@\(\);:&=\+\$\/%#\[\]\-_\.,~|]/i;
   twttr.txt.regexen.validUrlQueryEndingChars = /[a-z0-9_&=#\/]/i;
   twttr.txt.regexen.extractUrl = regexSupplant(
     '('                                                            + // $1 total match
@@ -275,10 +278,12 @@ if (typeof twttr === "undefined" || twttr === null) {
   , 'gi');
 
   twttr.txt.regexen.validTcoUrl = /^https?:\/\/t\.co\/[a-z0-9]+/i;
+  twttr.txt.regexen.urlHasProtocol = /^https?:\/\//i;
+  twttr.txt.regexen.urlHasHttps = /^https:\/\//i;
 
   // cashtag related regex
   twttr.txt.regexen.cashtag = /[a-z]{1,6}(?:[._][a-z]{1,2})?/i;
-  twttr.txt.regexen.validCashtag = regexSupplant('(?:^|#{spaces})\\$(#{cashtag})(?=$|\\s|[#{punct}])', 'gi');
+  twttr.txt.regexen.validCashtag = regexSupplant('(^|#{spaces})(\\$)(#{cashtag})(?=$|\\s|[#{punct}])', 'gi');
 
   // These URL validation pattern strings are based on the ABNF from RFC 3986
   twttr.txt.regexen.validateUrlUnreserved = /[a-z0-9\-._~]/i;
@@ -380,10 +385,11 @@ if (typeof twttr === "undefined" || twttr === null) {
   var OPTIONS_NOT_ATTRIBUTES = {'urlClass':true, 'listClass':true, 'usernameClass':true, 'hashtagClass':true, 'cashtagClass':true,
                             'usernameUrlBase':true, 'listUrlBase':true, 'hashtagUrlBase':true, 'cashtagUrlBase':true,
                             'usernameUrlBlock':true, 'listUrlBlock':true, 'hashtagUrlBlock':true, 'linkUrlBlock':true,
-                            'usernameIncludeSymbol':true, 'suppressLists':true, 'suppressNoFollow':true,
+                            'usernameIncludeSymbol':true, 'suppressLists':true, 'suppressNoFollow':true, 'targetBlank':true,
                             'suppressDataScreenName':true, 'urlEntities':true, 'symbolTag':true, 'textWithSymbolTag':true, 'urlTarget':true,
-                            'invisibleTagAttrs':true, 'linkAttributeBlock':true, 'linkTextBlock': true
+                            'invisibleTagAttrs':true, 'linkAttributeBlock':true, 'linkTextBlock': true, 'htmlEscapeNonEntities': true
                             };
+
   var BOOLEAN_ATTRIBUTES = {'disabled':true, 'readonly':true, 'multiple':true, 'checked':true};
 
   // Simple object cloning function for simple objects
@@ -449,6 +455,12 @@ if (typeof twttr === "undefined" || twttr === null) {
     attrs.href = options.hashtagUrlBase + hashtag;
     attrs.title = "#" + hashtag;
     attrs["class"] = options.hashtagClass;
+    if (hashtag.charAt(0).match(twttr.txt.regexen.rtl_chars)){
+      attrs["class"] += " rtl";
+    }
+    if (options.targetBlank) {
+      attrs.target = '_blank';
+    }
 
     return twttr.txt.linkToTextWithSymbol(entity, hash, hashtag, attrs, options);
   };
@@ -459,6 +471,9 @@ if (typeof twttr === "undefined" || twttr === null) {
     attrs.href = options.cashtagUrlBase + cashtag;
     attrs.title = "$" + cashtag;
     attrs["class"] =  options.cashtagClass;
+    if (options.targetBlank) {
+      attrs.target = '_blank';
+    }
 
     return twttr.txt.linkToTextWithSymbol(entity, "$", cashtag, attrs, options);
   };
@@ -473,6 +488,9 @@ if (typeof twttr === "undefined" || twttr === null) {
     attrs.href = isList ? options.listUrlBase + user + slashListname : options.usernameUrlBase + user;
     if (!isList && !options.suppressDataScreenName) {
       attrs['data-screen-name'] = user;
+    }
+    if (options.targetBlank) {
+      attrs.target = '_blank';
     }
 
     return twttr.txt.linkToTextWithSymbol(entity, at, isList ? user + slashListname : user, attrs, options);
@@ -492,7 +510,15 @@ if (typeof twttr === "undefined" || twttr === null) {
     }
 
     var attrs = clone(options.htmlAttrs || {});
+
+    if (!url.match(twttr.txt.regexen.urlHasProtocol)) {
+      url = "http://" + url;
+    }
     attrs.href = url;
+
+    if (options.targetBlank) {
+      attrs.target = '_blank';
+    }
 
     // set class only if urlClass is specified.
     if (options.urlClass) {
@@ -610,9 +636,13 @@ if (typeof twttr === "undefined" || twttr === null) {
     // sort entities by start index
     entities.sort(function(a,b){ return a.indices[0] - b.indices[0]; });
 
+    var nonEntity = options.htmlEscapeNonEntities ? twttr.txt.htmlEscape : function(text) {
+      return text;
+    };
+
     for (var i = 0; i < entities.length; i++) {
       var entity = entities[i];
-      result += text.substring(beginIndex, entity.indices[0]);
+      result += nonEntity(text.substring(beginIndex, entity.indices[0]));
 
       if (entity.url) {
         result += twttr.txt.linkToUrl(entity, text, options);
@@ -625,7 +655,7 @@ if (typeof twttr === "undefined" || twttr === null) {
       }
       beginIndex = entity.indices[1];
     }
-    result += text.substring(beginIndex, text.length);
+    result += nonEntity(text.substring(beginIndex, text.length));
     return result;
   };
 
@@ -667,7 +697,7 @@ if (typeof twttr === "undefined" || twttr === null) {
   };
 
   twttr.txt.autoLink = function(text, options) {
-    var entities = twttr.txt.extractEntitiesWithIndices(text, {extractUrlWithoutProtocol: false});
+    var entities = twttr.txt.extractEntitiesWithIndices(text, {extractUrlsWithoutProtocol: false});
     return twttr.txt.autoLinkEntities(text, entities, options);
   };
 
@@ -687,7 +717,7 @@ if (typeof twttr === "undefined" || twttr === null) {
   };
 
   twttr.txt.autoLinkUrlsCustom = function(text, options) {
-    var entities = twttr.txt.extractUrlsWithIndices(text, {extractUrlWithoutProtocol: false});
+    var entities = twttr.txt.extractUrlsWithIndices(text, {extractUrlsWithoutProtocol: false});
     return twttr.txt.autoLinkEntities(text, entities, options);
   };
 
@@ -732,8 +762,9 @@ if (typeof twttr === "undefined" || twttr === null) {
   };
 
   twttr.txt.extractMentionsWithIndices = function(text) {
-    var mentions = [];
-    var mentionsOrLists = twttr.txt.extractMentionsOrListsWithIndices(text);
+    var mentions = [],
+        mentionOrList,
+        mentionsOrLists = twttr.txt.extractMentionsOrListsWithIndices(text);
 
     for (var i = 0 ; i < mentionsOrLists.length; i++) {
       mentionOrList = mentionsOrLists[i];
@@ -758,18 +789,18 @@ if (typeof twttr === "undefined" || twttr === null) {
     }
 
     var possibleNames = [],
-        position = 0;
+        slashListname;
 
     text.replace(twttr.txt.regexen.validMentionOrList, function(match, before, atSign, screenName, slashListname, offset, chunk) {
       var after = chunk.slice(offset + match.length);
       if (!after.match(twttr.txt.regexen.endMentionMatch)) {
         slashListname = slashListname || '';
-        var startPosition = text.indexOf(atSign + screenName + slashListname, position);
-        position = startPosition + screenName.length + slashListname.length + 1;
+        var startPosition = offset + before.length;
+        var endPosition = startPosition + screenName.length + slashListname.length + 1;
         possibleNames.push({
           screenName: screenName,
           listSlug: slashListname,
-          indices: [startPosition, position]
+          indices: [startPosition, endPosition]
         });
       }
     });
@@ -891,18 +922,17 @@ if (typeof twttr === "undefined" || twttr === null) {
       return [];
     }
 
-    var tags = [],
-        position = 0;
+    var tags = [];
 
     text.replace(twttr.txt.regexen.validHashtag, function(match, before, hash, hashText, offset, chunk) {
       var after = chunk.slice(offset + match.length);
       if (after.match(twttr.txt.regexen.endHashtagMatch))
         return;
-      var startPosition = text.indexOf(hash + hashText, position);
-      position = startPosition + hashText.length + 1;
+      var startPosition = offset + before.length;
+      var endPosition = startPosition + hashText.length + 1;
       tags.push({
         hashtag: hashText,
-        indices: [startPosition, position]
+        indices: [startPosition, endPosition]
       });
     });
 
@@ -942,16 +972,14 @@ if (typeof twttr === "undefined" || twttr === null) {
       return [];
     }
 
-    var tags = [],
-        position = 0;
+    var tags = [];
 
-    text.replace(twttr.txt.regexen.validCashtag, function(match, cashtag, offset, chunk) {
-      // cashtag doesn't contain $ sign, so need to decrement index by 1.
-      var startPosition = text.indexOf(cashtag, position) - 1;
-      position = startPosition + cashtag.length + 1;
+    text.replace(twttr.txt.regexen.validCashtag, function(match, before, dollar, cashtag, offset, chunk) {
+      var startPosition = offset + before.length;
+      var endPosition = startPosition + cashtag.length + 1;
       tags.push({
         cashtag: cashtag,
-        indices: [startPosition, position]
+        indices: [startPosition, endPosition]
       });
     });
 
@@ -964,6 +992,10 @@ if (typeof twttr === "undefined" || twttr === null) {
 
   twttr.txt.modifyIndicesFromUTF16ToUnicode = function(text, entities) {
     twttr.txt.convertUnicodeIndices(text, entities, true);
+  };
+
+  twttr.txt.getUnicodeTextLength = function(text) {
+    return text.replace(twttr.txt.regexen.non_bmp_code_pairs, ' ').length;
   };
 
   twttr.txt.convertUnicodeIndices = function(text, entities, indicesInUTF16) {
@@ -1138,23 +1170,27 @@ if (typeof twttr === "undefined" || twttr === null) {
   ];
 
   // Returns the length of Tweet text with consideration to t.co URL replacement
+  // and chars outside the basic multilingual plane that use 2 UTF16 code points
   twttr.txt.getTweetLength = function(text, options) {
     if (!options) {
       options = {
-          short_url_length: 20,
-          short_url_length_https: 21
+          // These come from https://api.twitter.com/1/help/configuration.json
+          // described by https://dev.twitter.com/docs/api/1/get/help/configuration
+          short_url_length: 22,
+          short_url_length_https: 23
       };
     }
-    var textLength = text.length;
-    var urlsWithIndices = twttr.txt.extractUrlsWithIndices(text);
+    var textLength = twttr.txt.getUnicodeTextLength(text),
+        urlsWithIndices = twttr.txt.extractUrlsWithIndices(text);
+    twttr.txt.modifyIndicesFromUTF16ToUnicode(text, urlsWithIndices);
 
     for (var i = 0; i < urlsWithIndices.length; i++) {
     	// Subtract the length of the original URL
       textLength += urlsWithIndices[i].indices[0] - urlsWithIndices[i].indices[1];
 
-      // Add 21 characters for URL starting with https://
-      // Otherwise add 20 characters
-      if (urlsWithIndices[i].url.toLowerCase().match(/^https:\/\//)) {
+      // Add 23 characters for URL starting with https://
+      // Otherwise add 22 characters
+      if (urlsWithIndices[i].url.toLowerCase().match(twttr.txt.regexen.urlHasHttps)) {
          textLength += options.short_url_length_https;
       } else {
         textLength += options.short_url_length;
@@ -1280,4 +1316,13 @@ if (typeof twttr === "undefined" || twttr === null) {
     module.exports = twttr.txt;
   }
 
-}());
+  if (typeof window != 'undefined') {
+    if (window.twttr) {
+      for (var prop in twttr) {
+        window.twttr[prop] = twttr[prop];
+      }
+    } else {
+      window.twttr = twttr;
+    }
+  }
+})();
