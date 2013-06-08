@@ -57,11 +57,11 @@ window.Post = Backbone.Model.extend({
   },
 
 
-  error: function() {
+  error: function(msg) {
     var notification = new TextNotificationView({
       image: chrome.extension.getURL('/img/angle.png'),
-      title: 'Posting to App.net failed',
-      body: 'Please try agian. This notification will close in 10 seconds.',
+      title: msg || 'Posting to App.net failed',
+      body: 'Please try agian. This notification will automatically go poof.',
       timeout: 10 * 1000,
       type: 'PostError'
     });
