@@ -11,6 +11,9 @@ window.Post = Backbone.Model.extend({
   },
 
 
+  url: 'https://alpha-api.app.net/stream/0/posts',
+
+
   /**
    * Basic validations of a post
    */
