@@ -32,13 +32,16 @@ window.OmniboxView = Backbone.View.extend({
     }
     var post = new Post();
     // TODO: catch errors
-    post.save({ text: text }, {
+    var save = post.save({ text: text }, {
       headers: {
         'Authorization': 'Bearer ' + accounts.at(0).get('access_token')
       },
       success: post.success,
       error: post.error,
     });
+    if (save == false) {
+      post.error('Post length was too long.');
+    }
   },
 
 
