@@ -47,6 +47,10 @@
       "matches": [ "*://twitter.com/intent/tweet*" ],
       "css": [ "css/content_twitter.css" ],
       "js": [ "libs/jquery-min.js", "js/content_twitter.js" ]
+    },
+    {
+      "matches": [ "https://account.app.net/settings/" ],
+      "js": [ "libs/jquery-min.js", "js/content_alpha.js" ]
     }
   ],
   "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'"
