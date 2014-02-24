@@ -13,7 +13,6 @@ function attacheAuthHeader(xhr, settings) {
   if (settings.url.indexOf('https://alpha-api.app.net/') === 0) {
     xhr.setRequestHeader('Authorization', 'Bearer ' + window.account.get('accessToken'));
   }
-  _gaq.push(['_trackPageview']);
 }
 
 
@@ -30,8 +29,6 @@ function beforeSend(jqXHR, settings) {
 
 function complete(jqXHR, settings) {
   console.log('ajaxSetup:complete');
-  // Usage tracking
-  _gaq.push(['_trackPageview']);
 }
 
 

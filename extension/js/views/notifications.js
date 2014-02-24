@@ -30,7 +30,6 @@ window.TextNotificationView = Backbone.View.extend({
     this.setTimeout();
     this.notification.onclick = this.onClick;
     this.notification.show();
-    // _gaq.push(['_trackEvent', 'Notifications', 'Show', this.options.type]);
     return this;
   },
 
@@ -43,7 +42,6 @@ window.TextNotificationView = Backbone.View.extend({
       chrome.tabs.create({ url: this.notification.url });
     }
     this.notification.close();
-    // _gaq.push(['_trackEvent', 'Notifications', 'Click', this.type]);
   },
 
 
@@ -57,7 +55,6 @@ window.TextNotificationView = Backbone.View.extend({
     }
     setTimeout(function(){
       that.notification.close();
-      // _gaq.push(['_trackEvent', 'Notifications', 'Timeout', this.type]);
     }, config.get('autoDismissDelay') * 1000);
   },
 

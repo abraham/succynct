@@ -20,7 +20,6 @@
       "js/app.js",
       "js/config.js",
       "js/accounts.js",
-      "js/analytics.js",
       "js/views/omnibox.js",
       "js/views/notifications.js",
       "js/posts.js",
@@ -29,7 +28,7 @@
       "js/background.js"
     ]
   },
-  "minimum_chrome_version": "23",
+  "minimum_chrome_version": "32",
   "options_page": "options.html",
   "permissions": [
     "https://*.app.com/*",
@@ -52,6 +51,5 @@
       "matches": [ "https://account.app.net/settings/" ],
       "js": [ "libs/jquery-min.js", "js/content_alpha.js" ]
     }
-  ],
-  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'"
+  ]
 }
