@@ -39,6 +39,8 @@
   ],
   "omnibox": { "keyword" : "adn" },
   "web_accessible_resources": [
+    "callback.html",
+    "options.html",
     "img/angle.png"
   ],
   "content_scripts": [
