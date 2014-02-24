@@ -41,7 +41,7 @@ window.TextNotificationView = Backbone.View.extend({
     if (this.notification.url) {
       chrome.tabs.create({ url: this.notification.url });
     }
-    this.notification.close();
+    // this.notification.close();
   },
 
 
@@ -54,7 +54,7 @@ window.TextNotificationView = Backbone.View.extend({
       return that;
     }
     setTimeout(function(){
-      that.notification.close();
+      // that.notification.close();
     }, config.get('autoDismissDelay') * 1000);
   },
 
@@ -87,6 +87,7 @@ window.TextNotificationView = Backbone.View.extend({
   selectDetails: function() {
     // TODO: refactor this
     console.log('notification.selectDetails');
+
     var action = this.model.get('action');
     if (!action && this.model.get('id')) {
       // A mention does not have the same structure as interactions
@@ -96,6 +97,14 @@ window.TextNotificationView = Backbone.View.extend({
       var user = this.model.get('user');
       var object = this.model.toJSON();
       var title = 'Mention from @' + user.username;
+      var url = object.canonical_url;
+      if (object.annotations && object.annotations.length > 0) {
+        for (index in object.annotations) {
+          if (object.annotations[index].type == 'net.app.core.crosspost') {
+            url = object.annotations[index].value.canonical_url;
+          }
+        }
+      }
       if (object.reply_to) {
         title = 'Reply from @' + user.username + ' to your post';
       }
@@ -103,11 +112,21 @@ window.TextNotificationView = Backbone.View.extend({
         image: user.avatar_image.url,
         title: title,
         body: object.text,
-        url: object.canonical_url
+        url: url
       }
     }
+
     var user = this.model.get('users')[0];
     var object = this.model.get('objects')[0];
+    var url = object.canonical_url;
+    if (object.annotations && object.annotations.length > 0) {
+      for (index in object.annotations) {
+        if (object.annotations[index].type == 'net.app.core.crosspost') {
+          url = object.annotations[index].value.canonical_url;
+        }
+      }
+    }
+    console.log('action', action, url, object.canonical_url, object);
     if ('follow' === action) {
       var title = 'Followed by @' + user.username + ' on ADN';
       if (!config.get('actionsFollow')) {
@@ -122,6 +141,7 @@ window.TextNotificationView = Backbone.View.extend({
         body: user && user.description && user && user.description.text || '',
         url: user.canonical_url
       }
+
     } else if ('star' === action) {
       if (!config.get('actionsStar')) {
         return false;
@@ -130,8 +150,9 @@ window.TextNotificationView = Backbone.View.extend({
         image: user.avatar_image.url,
         title: 'Star by @' + user.username + ' on your post',
         body: object.text,
-        url: object.canonical_url
+        url: url
       }
+
     } else if ('reply' === action) {
       // Does not include the reply post so ignore and use the mentions API instead
       return false;
@@ -142,8 +163,9 @@ window.TextNotificationView = Backbone.View.extend({
         image: user.avatar_image.url,
         title: 'Reply from @' + user.username + ' to your post',
         body: object.text,
-        url: object.canonical_url
+        url: url
       }
+
     } else if ('repost' === action) {
       if (!config.get('actionsRepost')) {
         return false;
@@ -152,8 +174,9 @@ window.TextNotificationView = Backbone.View.extend({
         image: user.avatar_image.url,
         title: 'Repost by @' + user.username + ' of your post',
         body: object.text,
-        url: object.canonical_url
+        url: url
       }
+
     } else {
       console.log("Unsupposted interaction type", action);
       return false
