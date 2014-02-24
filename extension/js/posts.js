@@ -88,7 +88,7 @@ var Posts = Backbone.Collection.extend({
 
 
   /**
-   * Pull the data out of the reponse object
+   * Pull the data out of the response object
    */
   parse: function(response) {
     return response.data;
@@ -107,7 +107,8 @@ var Posts = Backbone.Collection.extend({
       error: this.error,
       update: true,
       data: {
-        count: 20 // TODO: start using since_id
+        count: 20, // TODO: start using since_id
+        include_post_annotations: 1
       },
       headers: {
         'Authorization': 'Bearer ' + accounts.at(0).get('access_token')

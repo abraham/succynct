@@ -88,7 +88,8 @@ var Mentions = Polling.extend({
       error: this.error,
       update: true,
       data: {
-        count: 20 // TODO: start using since_id
+        count: 20, // TODO: start using since_id
+        include_post_annotations: 1
       },
       headers: {
         'Authorization': 'Bearer ' + accounts.at(0).get('access_token')
